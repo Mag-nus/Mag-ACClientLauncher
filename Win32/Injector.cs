@@ -50,6 +50,9 @@ namespace Mag_ACClientLauncher.Win32
             finally
             {
                 kernel32.ResumeThread(pInfo.hThread);
+
+                kernel32.CloseHandle(pInfo.hThread);
+                kernel32.CloseHandle(pInfo.hProcess);
             }
         }
 
