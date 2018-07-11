@@ -47,45 +47,54 @@ namespace Mag_ACClientLauncher.Win32
         public static bool Inject(IntPtr processHandle, string pathOfDllToInject, string dllFunctionToExecute = null)
         {
             // Alocating some memory on the target process - enough to store the name of the dll and storing its address in a pointer
-            var allocMemAddress = kernel32.VirtualAllocEx(processHandle, IntPtr.Zero, (uint)((pathOfDllToInject.Length + 1) * Marshal.SizeOf(typeof(char))), kernel32.AllocationType.Commit | kernel32.AllocationType.Reserve, kernel32.MemoryProtection.ReadWrite);
+            var dwSize = (uint)((pathOfDllToInject.Length + 1) * Marshal.SizeOf(typeof(char)));
+
+            var allocMemAddress = kernel32.VirtualAllocEx(processHandle, IntPtr.Zero, dwSize, kernel32.AllocationType.Commit | kernel32.AllocationType.Reserve, kernel32.MemoryProtection.ReadWrite);
 
             if (allocMemAddress == IntPtr.Zero)
                 return false;
 
-            // Writing the name of the dll there
-            if (!kernel32.WriteProcessMemory(processHandle, allocMemAddress, Encoding.Default.GetBytes(pathOfDllToInject), (uint)((pathOfDllToInject.Length + 1) * Marshal.SizeOf(typeof(char))), out _))
-                return false;
-
-            // Searching for the address of LoadLibraryA and storing it in a pointer
-            var kernel32Handle = kernel32.GetModuleHandle("kernel32.dll");
-            var loadLibraryAddr = kernel32.GetProcAddress(kernel32Handle, "LoadLibraryA");
-
-            // Inject the DLL
-            var remoteThreadHandle = kernel32.CreateRemoteThread(processHandle, IntPtr.Zero, 0, loadLibraryAddr, allocMemAddress, 0, IntPtr.Zero);
-
-            if (remoteThreadHandle == IntPtr.Zero)
-                return false;
-
             try
             {
-                kernel32.WaitForSingleObject(remoteThreadHandle, kernel32.INFINITE);
+                // Writing the name of the dll there
+                if (!kernel32.WriteProcessMemory(processHandle, allocMemAddress, Encoding.Default.GetBytes(pathOfDllToInject), (uint) ((pathOfDllToInject.Length + 1) * Marshal.SizeOf(typeof(char))), out _))
+                    return false;
 
-                kernel32.GetExitCodeThread(remoteThreadHandle, out var injectedDllAddress);
+                // Searching for the address of LoadLibraryA and storing it in a pointer
+                var kernel32Handle = kernel32.GetModuleHandle("kernel32.dll");
+                var loadLibraryAddr = kernel32.GetProcAddress(kernel32Handle, "LoadLibraryA");
 
-                if (injectedDllAddress != 0)
+                // Inject the DLL
+                var remoteThreadHandle = kernel32.CreateRemoteThread(processHandle, IntPtr.Zero, 0, loadLibraryAddr, allocMemAddress, 0, IntPtr.Zero);
+
+                if (remoteThreadHandle == IntPtr.Zero)
+                    return false;
+
+                try
                 {
-                    // If we have a function to execute, lets do it
-                    if (!String.IsNullOrEmpty(dllFunctionToExecute))
-                        return Execute(processHandle, injectedDllAddress, pathOfDllToInject, dllFunctionToExecute);
+                    kernel32.WaitForSingleObject(remoteThreadHandle, kernel32.INFINITE);
 
-                    return true;
+                    kernel32.GetExitCodeThread(remoteThreadHandle, out var injectedDllAddress);
+
+                    if (injectedDllAddress != 0)
+                    {
+                        // If we have a function to execute, lets do it
+                        if (!String.IsNullOrEmpty(dllFunctionToExecute))
+                            return Execute(processHandle, injectedDllAddress, pathOfDllToInject, dllFunctionToExecute);
+
+                        return true;
+                    }
+
+                    return false;
                 }
-
-                return false;
+                finally
+                {
+                    kernel32.CloseHandle(remoteThreadHandle);
+                }
             }
             finally
             {
-                kernel32.CloseHandle(remoteThreadHandle);
+                kernel32.VirtualFreeEx(processHandle, allocMemAddress, dwSize, kernel32.AllocationType.Release);
             }
         }
 
@@ -129,7 +138,21 @@ namespace Mag_ACClientLauncher.Win32
             if (remoteThreadHandle == IntPtr.Zero)
                 return false;
 
-            return true;
+            try
+            {
+                kernel32.WaitForSingleObject(remoteThreadHandle, kernel32.INFINITE);
+
+                kernel32.GetExitCodeThread(remoteThreadHandle, out var exitCode);
+
+                if (exitCode != 0)
+                    return true;
+
+                return false;
+            }
+            finally
+            {
+                kernel32.CloseHandle(remoteThreadHandle);
+            }
         }
     }
 }

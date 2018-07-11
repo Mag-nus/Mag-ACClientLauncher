@@ -56,6 +56,10 @@ namespace Mag_ACClientLauncher.Win32
         [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
         public static extern IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress, uint dwSize, AllocationType flAllocationType, MemoryProtection flProtect);
 
+        [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
+        public static extern bool VirtualFreeEx(IntPtr hProcess, IntPtr lpAddress, uint dwSize, AllocationType dwFreeType);
+
+
         [DllImport("kernel32.dll")]
         public static extern IntPtr CreateRemoteThread(IntPtr hProcess, IntPtr lpThreadAttributes, uint dwStackSize, IntPtr lpStartAddress, IntPtr lpParameter, uint dwCreationFlags, IntPtr lpThreadId);
 
