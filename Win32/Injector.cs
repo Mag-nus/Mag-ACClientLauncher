@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -22,12 +23,42 @@ namespace Mag_ACClientLauncher.Win32
         }
 
         /// <summary>
+        /// This will start an application using kernel32.CreateProcess() suspended, inject the dll and then resume the process.<para />
+        /// If dllFunctionToExecute is defined, it will be called after the dll has been injected and before the process is resumed.
+        /// </summary>
+        /// <remarks>
+        /// This function was cleverly named by parad0x, one of the developers of Decal for Asheron's Call.
+        /// </remarks>
+        public static bool RunSuspendedCommaInjectCommaAndResume(string fileName, string arguments, string pathOfDllToInject, string dllFunctionToExecute = null)
+        {
+            // Reference: https://docs.microsoft.com/en-us/windows/desktop/procthread/process-creation-flags
+            const uint CREATE_SUSPENDED = 0x00000004;
+
+            kernel32.SECURITY_ATTRIBUTES pSec = new kernel32.SECURITY_ATTRIBUTES();
+            pSec.nLength = Marshal.SizeOf(pSec);
+            kernel32.SECURITY_ATTRIBUTES tSec = new kernel32.SECURITY_ATTRIBUTES();
+            tSec.nLength = Marshal.SizeOf(tSec);
+            kernel32.STARTUPINFO sInfo = new kernel32.STARTUPINFO();
+
+            if (!kernel32.CreateProcess(null, fileName + " " + arguments, ref pSec, ref tSec, false, CREATE_SUSPENDED, IntPtr.Zero, Path.GetDirectoryName(fileName), ref sInfo, out var pInfo))
+                return false;
+
+            try
+            {
+                return Inject(pInfo.hProcess, pathOfDllToInject, dllFunctionToExecute);
+            }
+            finally
+            {
+                kernel32.ResumeThread(pInfo.hThread);
+            }
+        }
+
+        /// <summary>
         /// This will inject a dll into an existing process defined by applicationName.<para />
         /// If dllFunctionToExecute is defined, it will be called after the dll has been injected.
         /// </summary>
         public static bool Inject(string applicationName, string pathOfDllToInject, string dllFunctionToExecute = null)
         {
-            // todo
             throw new NotImplementedException();
         }
 
