@@ -77,6 +77,8 @@ namespace Mag_ACClientLauncher.Win32
                     // If we have a function to execute, lets do it
                     if (!String.IsNullOrEmpty(dllFunctionToExecute))
                         return Execute(processHandle, injectedDllAddress, pathOfDllToInject, dllFunctionToExecute);
+
+                    return true;
                 }
 
                 return false;
