@@ -1,0 +1,25 @@
+﻿<Window x:Class="Mag_ACClientLauncher.ServerManagement.AddServer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Add A Server" Height="276.486" Width="276.926" ResizeMode="NoResize" WindowStartupLocation="CenterOwner">
+    <Grid>
+        <RadioButton x:Name="rdACEServer" Content="ACE Server" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" IsChecked="True"/>
+        <RadioButton x:Name="rdGDLServer" Content="GDL Server" Margin="0,10,25,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="78"/>
+        <Label x:Name="lblServerName" Content="Name:" HorizontalAlignment="Left" Margin="10,46,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtServerName" Height="23" Margin="70,46,25,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" ToolTip="The server's name (to be shown in the launcher, can be whatever you'd like here)."/>
+        <Label x:Name="lblServerAddress" Content="Address:" HorizontalAlignment="Left" Margin="10,74,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtServerAddress" Height="23" Margin="70,77,25,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" ToolTip="The server's api url."/>
+        <Label x:Name="lblServerPort" Content="Port:" HorizontalAlignment="Left" Margin="10,105,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtServerPort" Height="23" Margin="70,108,25,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" ToolTip="The server's port."/>
+        <Label x:Name="lblServerDefaultRodat" Content="Default Rodat:" HorizontalAlignment="Left" Margin="10,155,0,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="cmbDefaultRodat" Margin="0,159,25,0" VerticalAlignment="Top" SelectedValuePath="Content" SelectedIndex="0" HorizontalAlignment="Right" Width="86">
+            <ComboBoxItem x:Name='RodatFalse' Content="false"/>
+            <ComboBoxItem x:Name='RodatTrue' Content="true"/>
+        </ComboBox>
+        <Button x:Name="btnAdd" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="13,201,0,0" Click="btnAdd_Click" IsDefault="True"/>
+        <Button x:Name="btnCancel" Content="Cancel" VerticalAlignment="Top" Margin="0,201,25,0" IsCancel="True" ToolTip="True or false, whether the server will retrieve .dat files from the server." HorizontalAlignment="Right" Width="75"/>
+    </Grid>
+</Window>

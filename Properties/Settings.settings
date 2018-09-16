@@ -1,0 +1,27 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Mag_ACClientLauncher.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ACClientLocation" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Turbine\Asheron's Call\acclient.exe</Value>
+    </Setting>
+    <Setting Name="DecalInjectLocation" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Program Files (x86)\Decal 3.0\Inject.dll</Value>
+    </Setting>
+    <Setting Name="InjectDecal" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="BulkLaunchQuantity" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="BulkLaunchStartIndex" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="BulkLaunchUserNamePrefix" Type="System.String" Scope="User">
+      <Value Profile="(Default)">test_</Value>
+    </Setting>
+    <Setting Name="BulkLaunchInterval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -1,0 +1,53 @@
+﻿<Window x:Class="Mag_ACClientLauncher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Mag_ACClientLauncher"
+        xmlns:p="clr-namespace:Mag_ACClientLauncher.Properties"
+        mc:Ignorable="d"
+        Title="Mag-ACClientLauncher" Height="350.288" Width="425.755" MinWidth="200" MinHeight="200">
+    <Grid>
+        <TabControl UseLayoutRounding="False">
+            <TabItem Header="Launcher">
+                <Grid Background="#FFE5E5E5">
+                    <Button x:Name="cmdLaunch" Content="Launch" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="75" Click="cmdLaunch_Click" HorizontalContentAlignment="Center"/>
+                    <ComboBox x:Name="cboLauncherServerList" Margin="10,10,114,0" VerticalAlignment="Top"/>
+                    <Button x:Name="cmdAddServer" Content="Add Server" Margin="0,10,18,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="85" Click="cmdAddServer_Click"/>
+                    <Button x:Name="cmdEditServer" Content="Edit Server" Margin="0,35,18,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="85" Click="cmdEditServer_Click" IsEnabled="False"/>
+                    <Button x:Name="cmdDeleteServer" Content="Delete Server" Margin="0,60,18,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="85" Click="cmdDeleteServer_Click" IsEnabled="False"/>
+                    <ListBox Margin="10,37,114,35"/>
+                    <Button x:Name="cmdAddAccount" Content="Add Account" Margin="0,132,18,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="85"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Bulk Launcher" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <Grid Background="#FFE5E5E5">
+                    <ComboBox x:Name="cboBulkLauncherServerList" Margin="10,10,114,0" VerticalAlignment="Top"/>
+                    <Label Content="Quantity to launch" HorizontalAlignment="Left" Margin="10,44,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="txtBulkLaunchQuantity" Margin="163,47,0,0" TextWrapping="Wrap" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="38" RenderTransformOrigin="1.927,-3.718" Text="{Binding Source={x:Static p:Settings.Default}, Path=BulkLaunchQuantity, Mode=TwoWay}"/>
+                    <Label Content="Start launch at index" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="txtBulkLaunchStartIndex" Margin="163,75,0,0" TextWrapping="Wrap" HorizontalAlignment="Left" Width="38" RenderTransformOrigin="1.927,-3.718" Height="23" VerticalAlignment="Top" Text="{Binding Source={x:Static p:Settings.Default}, Path=BulkLaunchStartIndex, Mode=TwoWay}"/>
+                    <Label Content="User name prefix" HorizontalAlignment="Left" Margin="10,100,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="txtBulkLaunchUserNamePrefix" Margin="163,103,0,0" TextWrapping="Wrap" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="53" RenderTransformOrigin="1.927,-3.718" Text="{Binding Source={x:Static p:Settings.Default}, Path=BulkLaunchUserNamePrefix, Mode=TwoWay}"/>
+                    <Label Content="Interval between launches" HorizontalAlignment="Left" Margin="10,128,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="txtBulkLaunchInterval" Margin="163,131,0,0" TextWrapping="Wrap" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="38" RenderTransformOrigin="1.927,-3.718" Text="{Binding Source={x:Static p:Settings.Default}, Path=BulkLaunchInterval, Mode=TwoWay}"/>
+                    <Label Content="s" HorizontalAlignment="Left" Margin="197,133,0,0" VerticalAlignment="Top"/>
+                    <Button x:Name="cmdBulkLaunch" Content="Bulk Launch" Margin="223,133,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" RenderTransformOrigin="2.764,0.605" HorizontalAlignment="Left" Width="75" Click="cmdBulkLaunch_Click"/>
+                    <TextBox x:Name="txtBulkLaunchStatus" Margin="10,159,10,10" TextWrapping="Wrap" RenderTransformOrigin="1.927,-3.718" VerticalScrollBarVisibility="Auto" FontSize="9" FontFamily="Consolas"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Options">
+                <Grid Background="#FFE5E5E5">
+                    <TextBox x:Name="txtACClientLocation" HorizontalAlignment="Left" Height="23" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" IsReadOnly="True" Text="{Binding Source={x:Static p:Settings.Default}, Path=ACClientLocation, Mode=TwoWay}"/>
+                    <Label Content="ACClient.exe Location" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                    <Button x:Name="btnACClientLocation" Content="..." HorizontalAlignment="Left" Margin="315,37,0,0" VerticalAlignment="Top" Width="28" Click="btnACClientLocation_Click"/>
+                    <TextBox x:Name="txtDecalInjectLocation" HorizontalAlignment="Left" Height="23" Margin="10,95,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" IsReadOnly="True" Text="{Binding Source={x:Static p:Settings.Default}, Path=DecalInjectLocation, Mode=TwoWay}"/>
+                    <Label Content="Decal Location" HorizontalAlignment="Left" Margin="10,69,0,0" VerticalAlignment="Top"/>
+                    <Button x:Name="btnDecalInjectLocation" Content="..." HorizontalAlignment="Left" Margin="315,96,0,0" VerticalAlignment="Top" Width="28" Click="btnDecalLocation_Click"/>
+                    <CheckBox x:Name="chkInjectDecal" Content="Inject Decal" HorizontalAlignment="Left" Margin="10,128,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.041,3.396" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=InjectDecal, Mode=TwoWay}"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</Window>
