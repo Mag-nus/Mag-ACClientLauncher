@@ -46,7 +46,7 @@ namespace Mag_ACClientLauncher.ServerManagement
             SaveServerListToDisk();
         }
 
-        private static void SaveServerListToDisk()
+        public static void SaveServerListToDisk()
         {
             var directoryName = Path.GetDirectoryName(ServerListFileName);
 

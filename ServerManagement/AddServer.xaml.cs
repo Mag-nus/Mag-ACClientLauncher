@@ -45,7 +45,9 @@ namespace Mag_ACClientLauncher.ServerManagement
 
                 if (btnAdd.Content.ToString() == "Add")
                     ServerManager.AddNewServer(Server);
-                else if (btnAdd.Content.ToString() != "Save")
+                else if (btnAdd.Content.ToString() == "Save")
+                    ServerManager.SaveServerListToDisk();
+                else
                 {
                     MessageBox.Show("Unexpected content value for btnAdd");
                     return;
