@@ -69,11 +69,15 @@ namespace Mag_ACClientLauncher.ServerManagement
                 return false;
             }
 
-            if (ServerManager.ServerList.Any(s => s.Name == txtServerName.Text))
+            if (btnAdd.Content.ToString() == "Add")
             {
-                MessageBox.Show("Server Name already exists");
-                txtServerName.Focus();
-                return false;
+                if (ServerManager.ServerList.Any(s => s.Name == txtServerName.Text))
+                {
+                    MessageBox.Show("Server Name already exists");
+                    txtServerName.Focus();
+                    return false;
+                }
+
             }
 
             if (String.IsNullOrEmpty(txtServerAddress.Text))
@@ -82,7 +86,7 @@ namespace Mag_ACClientLauncher.ServerManagement
                 txtServerAddress.Focus();
                 return false;
             }
-
+                
             if (String.IsNullOrEmpty(txtServerPort.Text))
             {
                 MessageBox.Show("Server Port required");
@@ -97,11 +101,14 @@ namespace Mag_ACClientLauncher.ServerManagement
                 return false;
             }
 
-            if (ServerManager.ServerList.Any(s => s.Address == txtServerAddress.Text && s.Port == port))
+            if (btnAdd.Content.ToString() == "Add")
             {
-                MessageBox.Show("Server Address already exists");
-                txtServerName.Focus();
-                return false;
+                if (ServerManager.ServerList.Any(s => s.Address == txtServerAddress.Text && s.Port == port))
+                {
+                    MessageBox.Show("Server Address already exists");
+                    txtServerName.Focus();
+                    return false;
+                }
             }
 
             if (cmbDefaultRodat.SelectedValue == null)

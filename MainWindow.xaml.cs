@@ -23,12 +23,22 @@ namespace Mag_ACClientLauncher
 
             PopulateServerLists();
 
-            // todo restore previously selected server guid
+            if (!String.IsNullOrEmpty(Properties.Settings.Default.SelectedServer))
+            {
+                try
+                {
+                    var guid = new Guid(Properties.Settings.Default.SelectedServer);
+
+                    SelectServer(guid);
+                }
+                catch { /* ignored */ }
+            }
         }
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            // todo save selected server guid
+            if (cboLauncherServerList.SelectedItem is Server server)
+                Properties.Settings.Default.SelectedServer = server.Id.ToString();
 
             Properties.Settings.Default.Save();
 

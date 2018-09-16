@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 namespace Mag_ACClientLauncher.ServerManagement
 {
@@ -8,27 +10,16 @@ namespace Mag_ACClientLauncher.ServerManagement
     {
         public static readonly List<Server> ServerList = new List<Server>();
 
+        public static readonly string ServerListFileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\Mag-ACClientLauncher\\ServerList.xml";
+
         static ServerManager()
         {
             try
             {
-                /*
-                string folder = GetServerDataFolder();
-                var persister = new GameManagement.ServerPersister(folder);
-                var publishedGDLServers = persister.GetPublishedGDLServerList();
-                var publishedAceServers = persister.GetPublishedACEServerList();
-                var userServers = persister.ReadUserServers();
+                var xs = new XmlSerializer(typeof(List<Server>));
 
-                var servers = new List<GameManagement.ServerPersister.ServerData>();
-                servers.AddRange(publishedGDLServers);
-                servers.AddRange(publishedAceServers);
-                servers.AddRange(userServers);
-
-                var distinctServers = servers.Distinct().ToList();
-
-                foreach (var sdata in distinctServers)
-                    AddOrUpdateServer(sdata);
-                */
+                using (var reader = new StreamReader(ServerListFileName))
+                    ServerList = (List<Server>)xs.Deserialize(reader);
             }
             catch
             {
@@ -57,10 +48,15 @@ namespace Mag_ACClientLauncher.ServerManagement
 
         private static void SaveServerListToDisk()
         {
-            /*var userServers = ServerList.Where(s => s.ServerSource != ServerModel.ServerSourceEnum.Published);
+            var directoryName = Path.GetDirectoryName(ServerListFileName);
 
-            var persister = new GameManagement.ServerPersister(GetServerDataFolder());
-            persister.WriteServerListToFile(userServers);*/
+            if (!Directory.Exists(directoryName))
+                Directory.CreateDirectory(directoryName);
+
+            var xs = new XmlSerializer(typeof(List<Server>));
+
+            using (var tw = new StreamWriter(ServerListFileName))
+                xs.Serialize(tw, ServerList);
         }
     }
 }
