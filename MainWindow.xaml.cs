@@ -21,6 +21,12 @@ namespace Mag_ACClientLauncher
         {
             InitializeComponent();
 
+            if (Properties.Settings.Default.WindowPositionLeft != 0 && Properties.Settings.Default.WindowPositionTop != 0)
+            {
+                Left = Properties.Settings.Default.WindowPositionLeft;
+                Top = Properties.Settings.Default.WindowPositionTop;
+            }
+
             PopulateServerLists();
 
             if (!String.IsNullOrEmpty(Properties.Settings.Default.SelectedServer))
@@ -37,6 +43,9 @@ namespace Mag_ACClientLauncher
 
         protected override void OnClosing(CancelEventArgs e)
         {
+            Properties.Settings.Default.WindowPositionLeft = Left;
+            Properties.Settings.Default.WindowPositionTop = Top;
+
             if (cboLauncherServerList.SelectedItem is Server server)
                 Properties.Settings.Default.SelectedServer = server.Id.ToString();
 
@@ -254,7 +263,7 @@ namespace Mag_ACClientLauncher
                 txtBulkLaunchStatus.Text += $"{DateTime.Now}: Launching user {userName}, connection {(i - startIndex) + 1} of {launchQuantity}" + Environment.NewLine;
                 txtBulkLaunchStatus.ScrollToEnd();
 
-                if (!DoLaunch(server, userNamePrefix + i.ToString("0000"), "password"))
+                if (!DoLaunch(server, userNamePrefix + i.ToString("00000"), "password"))
                 {
                     txtBulkLaunchStatus.Text += $"{DateTime.Now}: Launching user {userName}, connection {(i - startIndex) + 1} of {launchQuantity} FAILED" + Environment.NewLine;
                     txtBulkLaunchStatus.ScrollToEnd();

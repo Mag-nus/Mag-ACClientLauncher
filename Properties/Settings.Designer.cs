@@ -118,5 +118,29 @@ namespace Mag_ACClientLauncher.Properties {
                 this["SelectedServer"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double WindowPositionLeft {
+            get {
+                return ((double)(this["WindowPositionLeft"]));
+            }
+            set {
+                this["WindowPositionLeft"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double WindowPositionTop {
+            get {
+                return ((double)(this["WindowPositionTop"]));
+            }
+            set {
+                this["WindowPositionTop"] = value;
+            }
+        }
     }
 }
