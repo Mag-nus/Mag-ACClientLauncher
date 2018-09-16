@@ -258,12 +258,12 @@ namespace Mag_ACClientLauncher
                 if (cmdBulkLaunch.Content.ToString() == "Bulk Launch")
                     return;
 
-                var userName = userNamePrefix + i.ToString("0000");
+                var userName = userNamePrefix + i.ToString("00000");
 
                 txtBulkLaunchStatus.Text += $"{DateTime.Now}: Launching user {userName}, connection {(i - startIndex) + 1} of {launchQuantity}" + Environment.NewLine;
                 txtBulkLaunchStatus.ScrollToEnd();
 
-                if (!DoLaunch(server, userNamePrefix + i.ToString("00000"), "password"))
+                if (!DoLaunch(server, userName, "password"))
                 {
                     txtBulkLaunchStatus.Text += $"{DateTime.Now}: Launching user {userName}, connection {(i - startIndex) + 1} of {launchQuantity} FAILED" + Environment.NewLine;
                     txtBulkLaunchStatus.ScrollToEnd();
