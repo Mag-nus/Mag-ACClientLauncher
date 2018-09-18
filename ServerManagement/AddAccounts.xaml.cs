@@ -51,6 +51,10 @@ namespace Mag_ACClientLauncher.ServerManagement
             if (!String.IsNullOrEmpty(txtUserName5.Text)) Accounts.Add(new Account { UserName = txtUserName5.Text, Password = txtPassword5.Text });
             if (!String.IsNullOrEmpty(txtUserName6.Text)) Accounts.Add(new Account { UserName = txtUserName6.Text, Password = txtPassword6.Text });
 
+            // Add an empty character record to every new account. This allows users to select this empty record to launch without entering into the world.
+            foreach (var account in Accounts)
+                account.Characters.Add("");
+
             return true;
         }
 

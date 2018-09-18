@@ -71,6 +71,7 @@ namespace Mag_ACClientLauncher.ServerManagement
 
             Account.Characters.Clear();
 
+            // Add an empty character record to every new account. This allows users to select this empty record to launch without entering into the world.
             Account.Characters.Add("");
 
             if (!String.IsNullOrEmpty(txtCharacter1.Text)) Account.Characters.Add(txtCharacter1.Text);

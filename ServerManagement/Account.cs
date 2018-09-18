@@ -10,7 +10,7 @@ namespace Mag_ACClientLauncher.ServerManagement
 
         public string Password { get; set; }
 
-        public List<string> Characters { get; } = new List<string> { "" };
+        public List<string> Characters { get; } = new List<string>();
 
         public int SelectedCharacterIndex { get; set; }
 
