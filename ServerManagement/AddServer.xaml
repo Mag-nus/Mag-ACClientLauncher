@@ -15,7 +15,7 @@
         <Label x:Name="lblServerPort" Content="Port:" HorizontalAlignment="Left" Margin="10,105,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="txtServerPort" Height="23" Margin="70,108,25,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" ToolTip="The server's port."/>
         <Label x:Name="lblServerDefaultRodat" Content="Default Rodat:" HorizontalAlignment="Left" Margin="10,155,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="cmbDefaultRodat" Margin="0,159,25,0" VerticalAlignment="Top" SelectedValuePath="Content" SelectedIndex="0" HorizontalAlignment="Right" Width="86">
+        <ComboBox x:Name="cmbDefaultRodat" Margin="0,159,25,0" VerticalAlignment="Top" SelectedValuePath="Content" SelectedIndex="1" HorizontalAlignment="Right" Width="86">
             <ComboBoxItem x:Name='RodatFalse' Content="false"/>
             <ComboBoxItem x:Name='RodatTrue' Content="true"/>
         </ComboBox>

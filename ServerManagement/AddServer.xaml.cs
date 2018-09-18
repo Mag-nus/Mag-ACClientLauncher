@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Windows;
 
 namespace Mag_ACClientLauncher.ServerManagement
@@ -7,7 +6,7 @@ namespace Mag_ACClientLauncher.ServerManagement
     /// <summary>
     /// Interaction logic for AddServer.xaml
     /// </summary>
-    public partial class AddServer
+    public partial class AddServer : Window
     {
         public readonly Server Server;
 
@@ -43,16 +42,6 @@ namespace Mag_ACClientLauncher.ServerManagement
                 if (!ValidateInput())
                     return;
 
-                if (btnAdd.Content.ToString() == "Add")
-                    ServerManager.AddNewServer(Server);
-                else if (btnAdd.Content.ToString() == "Save")
-                    ServerManager.SaveServerListToDisk();
-                else
-                {
-                    MessageBox.Show("Unexpected content value for btnAdd");
-                    return;
-                }
-
                 DialogResult = true;
                 Close();
             }
@@ -69,17 +58,6 @@ namespace Mag_ACClientLauncher.ServerManagement
                 MessageBox.Show("Server Name required");
                 txtServerName.Focus();
                 return false;
-            }
-
-            if (btnAdd.Content.ToString() == "Add")
-            {
-                if (ServerManager.ServerList.Any(s => s.Name == txtServerName.Text))
-                {
-                    MessageBox.Show("Server Name already exists");
-                    txtServerName.Focus();
-                    return false;
-                }
-
             }
 
             if (String.IsNullOrEmpty(txtServerAddress.Text))
@@ -101,16 +79,6 @@ namespace Mag_ACClientLauncher.ServerManagement
                 MessageBox.Show("Server Port must be numeric");
                 txtServerPort.Focus();
                 return false;
-            }
-
-            if (btnAdd.Content.ToString() == "Add")
-            {
-                if (ServerManager.ServerList.Any(s => s.Address == txtServerAddress.Text && s.Port == port))
-                {
-                    MessageBox.Show("Server Address already exists");
-                    txtServerName.Focus();
-                    return false;
-                }
             }
 
             if (cmbDefaultRodat.SelectedValue == null)

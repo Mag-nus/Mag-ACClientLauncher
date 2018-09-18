@@ -98,12 +98,12 @@ namespace Mag_ACClientLauncher.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("2")]
-        public int BulkLaunchInterval {
+        public int IntervalBetweenLaunches {
             get {
-                return ((int)(this["BulkLaunchInterval"]));
+                return ((int)(this["IntervalBetweenLaunches"]));
             }
             set {
-                this["BulkLaunchInterval"] = value;
+                this["IntervalBetweenLaunches"] = value;
             }
         }
         

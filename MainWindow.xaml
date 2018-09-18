@@ -1,50 +1,73 @@
-﻿<Window x:Class="Mag_ACClientLauncher.MainWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Mag_ACClientLauncher"
         xmlns:p="clr-namespace:Mag_ACClientLauncher.Properties"
+        xmlns:ServerManagement="clr-namespace:Mag_ACClientLauncher.ServerManagement" x:Class="Mag_ACClientLauncher.MainWindow"
         mc:Ignorable="d"
-        Title="Mag-ACClientLauncher" Height="350.288" Width="425.755" MinWidth="200" MinHeight="200">
+        Title="Mag-ACClientLauncher" Height="300" Width="515" MinWidth="400" MinHeight="240">
     <Grid>
         <TabControl UseLayoutRounding="False">
             <TabItem Header="Launcher">
                 <Grid Background="#FFE5E5E5">
-                    <Button x:Name="cmdLaunch" Content="Launch" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="75" Click="cmdLaunch_Click" HorizontalContentAlignment="Center"/>
-                    <ComboBox x:Name="cboLauncherServerList" Margin="10,10,114,0" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="cboLauncherServerList" Margin="10,10,114,0" VerticalAlignment="Top" SelectionChanged="cboLauncherServerList_SelectionChanged"/>
                     <Button x:Name="cmdAddServer" Content="Add Server" Margin="0,10,18,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="85" Click="cmdAddServer_Click"/>
                     <Button x:Name="cmdEditServer" Content="Edit Server" Margin="0,35,18,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="85" Click="cmdEditServer_Click" IsEnabled="False"/>
                     <Button x:Name="cmdDeleteServer" Content="Delete Server" Margin="0,60,18,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="85" Click="cmdDeleteServer_Click" IsEnabled="False"/>
-                    <ListBox Margin="10,37,114,35"/>
-                    <Button x:Name="cmdAddAccount" Content="Add Account" Margin="0,132,18,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="85"/>
+                    <ListBox x:Name="lstAccounts" Margin="10,37,114,35">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="120"/>
+                                        <ColumnDefinition Width="150"/>
+                                        <ColumnDefinition Width="50"/>
+                                    </Grid.ColumnDefinitions>
+                                    <CheckBox VerticalAlignment="Center" IsChecked="{Binding Path=(ServerManagement:Account.Launch)}"/>
+                                    <Label Grid.Column="1" Content="{Binding Path=(ServerManagement:Account.UserName)}"/>
+                                    <ComboBox Grid.Column="2" ItemsSource="{Binding Path=(ServerManagement:Account.Characters)}" SelectedIndex="{Binding Path=(ServerManagement:Account.SelectedCharacterIndex)}"/>
+                                    <Button Grid.Column="3" Content="Launch" Click="cmdLaunch_Click"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Button x:Name="cmdAddAccounts" Content="Add Accounts" Margin="0,0,13,60" HorizontalAlignment="Right" Width="90" Click="cmdAddAccounts_Click" Height="20" VerticalAlignment="Bottom"/>
+                    <Button x:Name="cmdEditAccount" Content="Edit Account" Margin="0,0,13,35" HorizontalAlignment="Right" Width="90" IsEnabled="False" Click="cmdEditAccount_Click" Height="20" VerticalAlignment="Bottom"/>
+                    <Button x:Name="cmdDeleteAccount" Content="Delete Account" Margin="0,0,13,10" HorizontalAlignment="Right" Width="90" IsEnabled="False" Click="cmdDeleteAccount_Click" Height="20" VerticalAlignment="Bottom"/>
+                    <Button x:Name="cmdLaunchAll" Content="Launch All" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="85" Click="cmdLaunchAll_Click" HorizontalContentAlignment="Center"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Bulk Launcher" HorizontalAlignment="Left" VerticalAlignment="Top">
                 <Grid Background="#FFE5E5E5">
                     <ComboBox x:Name="cboBulkLauncherServerList" Margin="10,10,114,0" VerticalAlignment="Top"/>
                     <Label Content="Quantity to launch" HorizontalAlignment="Left" Margin="10,44,0,0" VerticalAlignment="Top"/>
-                    <TextBox x:Name="txtBulkLaunchQuantity" Margin="163,47,0,0" TextWrapping="Wrap" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="53" RenderTransformOrigin="1.927,-3.718" Text="{Binding Source={x:Static p:Settings.Default}, Path=BulkLaunchQuantity, Mode=TwoWay}" MaxLength="5" MaxLines="1"/>
+                    <TextBox x:Name="txtBulkLaunchQuantity" Margin="163,47,0,0" TextWrapping="Wrap" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="53" RenderTransformOrigin="1.927,-3.718" Text="{Binding BulkLaunchQuantity, Mode=TwoWay, Source={x:Static p:Settings.Default}}" MaxLength="5" MaxLines="1"/>
                     <Label Content="Start launch at index" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>
-                    <TextBox x:Name="txtBulkLaunchStartIndex" Margin="163,75,0,0" TextWrapping="Wrap" HorizontalAlignment="Left" Width="53" RenderTransformOrigin="1.927,-3.718" Height="23" VerticalAlignment="Top" Text="{Binding Source={x:Static p:Settings.Default}, Path=BulkLaunchStartIndex, Mode=TwoWay}" MaxLength="5" MaxLines="1"/>
+                    <TextBox x:Name="txtBulkLaunchStartIndex" Margin="163,75,0,0" TextWrapping="Wrap" HorizontalAlignment="Left" Width="53" RenderTransformOrigin="1.927,-3.718" Height="23" VerticalAlignment="Top" Text="{Binding BulkLaunchStartIndex, Mode=TwoWay, Source={x:Static p:Settings.Default}}" MaxLength="5" MaxLines="1"/>
                     <Label Content="User name prefix" HorizontalAlignment="Left" Margin="10,100,0,0" VerticalAlignment="Top"/>
-                    <TextBox x:Name="txtBulkLaunchUserNamePrefix" Margin="163,103,0,0" TextWrapping="Wrap" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="53" RenderTransformOrigin="1.927,-3.718" Text="{Binding Source={x:Static p:Settings.Default}, Path=BulkLaunchUserNamePrefix, Mode=TwoWay}" MaxLines="1"/>
-                    <Label Content="Interval between launches" HorizontalAlignment="Left" Margin="10,128,0,0" VerticalAlignment="Top"/>
-                    <TextBox x:Name="txtBulkLaunchInterval" Margin="163,131,0,0" TextWrapping="Wrap" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="38" RenderTransformOrigin="1.927,-3.718" Text="{Binding Source={x:Static p:Settings.Default}, Path=BulkLaunchInterval, Mode=TwoWay}" MaxLines="1" MaxLength="2"/>
-                    <Label Content="s" HorizontalAlignment="Left" Margin="197,133,0,0" VerticalAlignment="Top"/>
-                    <Button x:Name="cmdBulkLaunch" Content="Bulk Launch" Margin="223,133,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" RenderTransformOrigin="2.764,0.605" HorizontalAlignment="Left" Width="75" Click="cmdBulkLaunch_Click"/>
-                    <TextBox x:Name="txtBulkLaunchStatus" Margin="10,159,10,10" TextWrapping="Wrap" RenderTransformOrigin="1.927,-3.718" VerticalScrollBarVisibility="Auto" FontSize="9" FontFamily="Consolas"/>
+                    <TextBox x:Name="txtBulkLaunchUserNamePrefix" Margin="163,103,0,0" TextWrapping="Wrap" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="53" RenderTransformOrigin="1.927,-3.718" Text="{Binding BulkLaunchUserNamePrefix, Mode=TwoWay, Source={x:Static p:Settings.Default}}" MaxLines="1"/>
+                    <Button x:Name="cmdBulkLaunch" Content="Bulk Launch" Margin="226,106,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" RenderTransformOrigin="2.764,0.605" HorizontalAlignment="Left" Width="75" Click="cmdBulkLaunch_Click"/>
+                    <TextBox x:Name="txtBulkLaunchStatus" Margin="10,131,10,10" TextWrapping="Wrap" RenderTransformOrigin="1.927,-3.718" VerticalScrollBarVisibility="Auto" FontSize="10" FontFamily="Consolas"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Options">
                 <Grid Background="#FFE5E5E5">
-                    <TextBox x:Name="txtACClientLocation" HorizontalAlignment="Left" Height="23" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" IsReadOnly="True" Text="{Binding Source={x:Static p:Settings.Default}, Path=ACClientLocation, Mode=TwoWay}"/>
-                    <Label Content="ACClient.exe Location" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                    <Button x:Name="btnACClientLocation" Content="..." HorizontalAlignment="Left" Margin="315,37,0,0" VerticalAlignment="Top" Width="28" Click="btnACClientLocation_Click"/>
-                    <TextBox x:Name="txtDecalInjectLocation" HorizontalAlignment="Left" Height="23" Margin="10,95,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" IsReadOnly="True" Text="{Binding Source={x:Static p:Settings.Default}, Path=DecalInjectLocation, Mode=TwoWay}"/>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="113*"/>
+                        <ColumnDefinition Width="388*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="txtACClientLocation" HorizontalAlignment="Left" Height="23" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" IsReadOnly="True" Text="{Binding ACClientLocation, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Grid.ColumnSpan="2"/>
+                    <Label Content="ACClient.exe Location" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                    <Button x:Name="btnACClientLocation" Content="..." HorizontalAlignment="Left" Margin="201.568,37,0,0" VerticalAlignment="Top" Width="28" Click="btnACClientLocation_Click" Grid.Column="1"/>
+                    <TextBox x:Name="txtDecalInjectLocation" HorizontalAlignment="Left" Height="23" Margin="10,95,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" IsReadOnly="True" Text="{Binding DecalInjectLocation, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Grid.ColumnSpan="2"/>
                     <Label Content="Decal Location" HorizontalAlignment="Left" Margin="10,69,0,0" VerticalAlignment="Top"/>
-                    <Button x:Name="btnDecalInjectLocation" Content="..." HorizontalAlignment="Left" Margin="315,96,0,0" VerticalAlignment="Top" Width="28" Click="btnDecalLocation_Click"/>
-                    <CheckBox x:Name="chkInjectDecal" Content="Inject Decal" HorizontalAlignment="Left" Margin="10,128,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.041,3.396" IsChecked="{Binding Source={x:Static p:Settings.Default}, Path=InjectDecal, Mode=TwoWay}"/>
+                    <Button x:Name="btnDecalInjectLocation" Content="..." HorizontalAlignment="Left" Margin="201.568,96,0,0" VerticalAlignment="Top" Width="28" Click="btnDecalLocation_Click" Grid.Column="1"/>
+                    <CheckBox x:Name="chkInjectDecal" Content="Inject Decal" HorizontalAlignment="Left" Margin="10,128,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.041,3.396" IsChecked="{Binding InjectDecal, Mode=TwoWay, Source={x:Static p:Settings.Default}}"/>
+                    <Label Content="Interval between launches" HorizontalAlignment="Left" Margin="10,157,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                    <TextBox x:Name="txtBulkLaunchInterval" Margin="49.568,160,0,0" TextWrapping="Wrap" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="38" RenderTransformOrigin="1.927,-3.718" Text="{Binding IntervalBetweenLaunches, Mode=TwoWay, Source={x:Static p:Settings.Default}}" MaxLines="1" MaxLength="2" Grid.Column="1"/>
+                    <Label Content="s" HorizontalAlignment="Left" Margin="84.568,160,0,0" VerticalAlignment="Top" Grid.Column="1"/>
                 </Grid>
             </TabItem>
         </TabControl>

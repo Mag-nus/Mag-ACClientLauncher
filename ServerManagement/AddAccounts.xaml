@@ -1,0 +1,29 @@
+﻿<Window x:Class="Mag_ACClientLauncher.ServerManagement.AddAccounts"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Add Accounts" Height="282.266" Width="276.926" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+    <Grid>
+        <Button x:Name="btnAdd" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="13,208,0,0" IsDefault="True" Click="btnAdd_Click"/>
+        <Button x:Name="btnCancel" Content="Cancel" VerticalAlignment="Top" Margin="171,208,0,0" IsCancel="True" ToolTip="True or false, whether the server will retrieve .dat files from the server." HorizontalAlignment="Left" Width="75"/>
+        <Label Content="Username" HorizontalAlignment="Left" Margin="13,10,0,0" VerticalAlignment="Top"/>
+        <Label Content="Password" HorizontalAlignment="Left" Margin="186,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.321,0.973"/>
+        <TextBox x:Name="txtUserName1" HorizontalAlignment="Left" Height="23" Margin="13,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" MaxLines="1" MaxLength="16"/>
+        <TextBox x:Name="txtPassword1" HorizontalAlignment="Left" Height="23" Margin="136,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" MaxLines="1" MaxLength="16"/>
+        <TextBox x:Name="txtUserName2" HorizontalAlignment="Left" Height="23" Margin="13,64,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" MaxLines="1" MaxLength="16"/>
+        <TextBox x:Name="txtPassword2" HorizontalAlignment="Left" Height="23" Margin="136,64,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" MaxLines="1" MaxLength="16"/>
+        <TextBox x:Name="txtUserName3" HorizontalAlignment="Left" Height="23" Margin="13,92,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" MaxLines="1" MaxLength="16"/>
+        <TextBox x:Name="txtPassword3" HorizontalAlignment="Left" Height="23" Margin="136,92,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" MaxLines="1" MaxLength="16"/>
+        <TextBox x:Name="txtUserName4" HorizontalAlignment="Left" Height="23" Margin="13,120,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" MaxLines="1" MaxLength="16"/>
+        <TextBox x:Name="txtPassword4" HorizontalAlignment="Left" Height="23" Margin="136,120,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" MaxLines="1" MaxLength="16"/>
+        <TextBox x:Name="txtUserName5" HorizontalAlignment="Left" Height="23" Margin="13,148,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" MaxLines="1" MaxLength="16"/>
+        <TextBox x:Name="txtPassword5" HorizontalAlignment="Left" Height="23" Margin="136,148,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" MaxLines="1" MaxLength="16"/>
+        <TextBox x:Name="txtUserName6" HorizontalAlignment="Left" Height="23" Margin="13,176,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" MaxLines="1" MaxLength="16"/>
+        <TextBox x:Name="txtPassword6" HorizontalAlignment="Left" Height="23" Margin="136,176,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" MaxLines="1" MaxLength="16"/>
+        <Label Content="Username" HorizontalAlignment="Left" Margin="13,10,0,0" VerticalAlignment="Top"/>
+        <Label Content="Password" HorizontalAlignment="Left" Margin="186,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.321,0.973"/>
+
+    </Grid>
+</Window>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 
 namespace Mag_ACClientLauncher.ServerManagement
 {
@@ -14,6 +15,8 @@ namespace Mag_ACClientLauncher.ServerManagement
         public ushort Port;
 
         public bool ReadOnlyDat;
+
+        public readonly ObservableCollection<Account> Accounts = new ObservableCollection<Account>();
 
         public override string ToString()
         {

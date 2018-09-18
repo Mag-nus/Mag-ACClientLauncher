@@ -46,14 +46,25 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ServerManagement\Account.cs" />
+    <Compile Include="ServerManagement\AddAccounts.xaml.cs">
+      <DependentUpon>AddAccounts.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ServerManagement\AddServer.xaml.cs">
       <DependentUpon>AddServer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ServerManagement\EditAccount.xaml.cs">
+      <DependentUpon>EditAccount.xaml</DependentUpon>
     </Compile>
     <Compile Include="ServerManagement\ServerManager.cs" />
     <Compile Include="ServerManagement\Server.cs" />
     <Compile Include="ServerManagement\ServerType.cs" />
     <Compile Include="Win32\Injector.cs" />
     <Compile Include="Win32\kernel32.cs" />
+    <Page Include="ServerManagement\AddAccounts.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ServerManagement\AddServer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -70,6 +81,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="ServerManagement\EditAccount.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -97,8 +112,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="AccountManagement\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

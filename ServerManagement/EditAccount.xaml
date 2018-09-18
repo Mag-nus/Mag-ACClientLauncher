@@ -1,0 +1,30 @@
+﻿<Window x:Class="Mag_ACClientLauncher.ServerManagement.EditAccount"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Mag_ACClientLauncher.ServerManagement"
+        mc:Ignorable="d"
+        Title="Edit Account" Height="334.9" Width="276.926" ResizeMode="NoResize" WindowStartupLocation="CenterOwner">
+    <Grid>
+        <Label Content="Username" HorizontalAlignment="Left" Margin="13,10,0,0" VerticalAlignment="Top"/>
+        <Label Content="Password" HorizontalAlignment="Left" Margin="186,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.321,0.973"/>
+        <TextBox x:Name="txtUserName" HorizontalAlignment="Left" Height="23" Margin="13,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" MaxLines="1" MaxLength="16"/>
+        <TextBox x:Name="txtPassword" HorizontalAlignment="Left" Height="23" Margin="136,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" MaxLines="1" MaxLength="16"/>
+        <Button x:Name="btnSave" Content="Save" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="13,263,0,0" IsDefault="True" Click="btnSave_Click"/>
+        <Button x:Name="btnCancel" Content="Cancel" VerticalAlignment="Top" Margin="171,263,25,0" IsCancel="True" ToolTip="True or false, whether the server will retrieve .dat files from the server."/>
+        <Label Content="Characters" HorizontalAlignment="Left" Margin="13,64,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtCharacter1" HorizontalAlignment="Left" Height="23" Margin="13,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" MaxLines="1" MaxLength="16"/>
+        <TextBox x:Name="txtCharacter7" HorizontalAlignment="Left" Height="23" Margin="136,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" MaxLines="1" MaxLength="16"/>
+        <TextBox x:Name="txtCharacter2" HorizontalAlignment="Left" Height="23" Margin="13,118,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" MaxLines="1" MaxLength="16"/>
+        <TextBox x:Name="txtCharacter8" HorizontalAlignment="Left" Height="23" Margin="136,118,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" MaxLines="1" MaxLength="16"/>
+        <TextBox x:Name="txtCharacter3" HorizontalAlignment="Left" Height="23" Margin="13,146,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" MaxLines="1" MaxLength="16"/>
+        <TextBox x:Name="txtCharacter9" HorizontalAlignment="Left" Height="23" Margin="136,146,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" MaxLines="1" MaxLength="16"/>
+        <TextBox x:Name="txtCharacter4" HorizontalAlignment="Left" Height="23" Margin="13,174,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" MaxLines="1" MaxLength="16"/>
+        <TextBox x:Name="txtCharacter10" HorizontalAlignment="Left" Height="23" Margin="136,174,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" MaxLines="1" MaxLength="16"/>
+        <TextBox x:Name="txtCharacter5" HorizontalAlignment="Left" Height="23" Margin="13,202,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" MaxLines="1" MaxLength="16"/>
+        <TextBox x:Name="txtCharacter11" HorizontalAlignment="Left" Height="23" Margin="136,202,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" MaxLines="1" MaxLength="16"/>
+        <TextBox x:Name="txtCharacter6" HorizontalAlignment="Left" Height="23" Margin="13,230,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" MaxLines="1" MaxLength="16"/>
+
+    </Grid>
+</Window>

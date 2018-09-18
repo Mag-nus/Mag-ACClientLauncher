@@ -20,7 +20,7 @@
     <Setting Name="BulkLaunchUserNamePrefix" Type="System.String" Scope="User">
       <Value Profile="(Default)">test_</Value>
     </Setting>
-    <Setting Name="BulkLaunchInterval" Type="System.Int32" Scope="User">
+    <Setting Name="IntervalBetweenLaunches" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">2</Value>
     </Setting>
     <Setting Name="SelectedServer" Type="System.String" Scope="User">
