@@ -365,7 +365,7 @@ namespace Mag_ACClientLauncher
 
             try
             {
-                if (cboLauncherServerList.SelectedItem is Server server)
+                if (cboBulkLauncherServerList.SelectedItem is Server server)
                     await DoBulkLaunch(Properties.Settings.Default.BulkLaunchQuantity, Properties.Settings.Default.BulkLaunchStartIndex, Properties.Settings.Default.BulkLaunchUserNamePrefix, TimeSpan.FromSeconds(Properties.Settings.Default.IntervalBetweenLaunches), server);
             }
             finally
