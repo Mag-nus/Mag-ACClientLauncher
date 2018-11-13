@@ -41,7 +41,7 @@
             </TabItem>
             <TabItem Header="Bulk Launcher" HorizontalAlignment="Left" VerticalAlignment="Top">
                 <Grid Background="#FFE5E5E5">
-                    <ComboBox x:Name="cboBulkLauncherServerList" Margin="10,10,114,0" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="cboBulkLauncherServerList" Margin="10,10,114,0" VerticalAlignment="Top" SelectionChanged="cboBulkLauncherServerList_SelectionChanged"/>
                     <Label Content="Quantity to launch" HorizontalAlignment="Left" Margin="10,44,0,0" VerticalAlignment="Top"/>
                     <TextBox x:Name="txtBulkLaunchQuantity" Margin="163,47,0,0" TextWrapping="Wrap" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="53" RenderTransformOrigin="1.927,-3.718" Text="{Binding BulkLaunchQuantity, Mode=TwoWay, Source={x:Static p:Settings.Default}}" MaxLength="5" MaxLines="1"/>
                     <Label Content="Start launch at index" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>
@@ -54,20 +54,16 @@
             </TabItem>
             <TabItem Header="Options">
                 <Grid Background="#FFE5E5E5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="113*"/>
-                        <ColumnDefinition Width="388*"/>
-                    </Grid.ColumnDefinitions>
                     <TextBox x:Name="txtACClientLocation" HorizontalAlignment="Left" Height="23" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" IsReadOnly="True" Text="{Binding ACClientLocation, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Grid.ColumnSpan="2"/>
                     <Label Content="ACClient.exe Location" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-                    <Button x:Name="btnACClientLocation" Content="..." HorizontalAlignment="Left" Margin="201.568,37,0,0" VerticalAlignment="Top" Width="28" Click="btnACClientLocation_Click" Grid.Column="1"/>
+                    <Button x:Name="btnACClientLocation" Content="..." HorizontalAlignment="Left" Margin="315,37,0,0" VerticalAlignment="Top" Width="28" Click="btnACClientLocation_Click"/>
                     <TextBox x:Name="txtDecalInjectLocation" HorizontalAlignment="Left" Height="23" Margin="10,95,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" IsReadOnly="True" Text="{Binding DecalInjectLocation, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Grid.ColumnSpan="2"/>
                     <Label Content="Decal Location" HorizontalAlignment="Left" Margin="10,69,0,0" VerticalAlignment="Top"/>
-                    <Button x:Name="btnDecalInjectLocation" Content="..." HorizontalAlignment="Left" Margin="201.568,96,0,0" VerticalAlignment="Top" Width="28" Click="btnDecalLocation_Click" Grid.Column="1"/>
+                    <Button x:Name="btnDecalInjectLocation" Content="..." HorizontalAlignment="Left" Margin="315,96,0,0" VerticalAlignment="Top" Width="28" Click="btnDecalLocation_Click"/>
                     <CheckBox x:Name="chkInjectDecal" Content="Inject Decal" HorizontalAlignment="Left" Margin="10,128,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.041,3.396" IsChecked="{Binding InjectDecal, Mode=TwoWay, Source={x:Static p:Settings.Default}}"/>
                     <Label Content="Interval between launches" HorizontalAlignment="Left" Margin="10,157,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-                    <TextBox x:Name="txtBulkLaunchInterval" Margin="49.568,160,0,0" TextWrapping="Wrap" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="38" RenderTransformOrigin="1.927,-3.718" Text="{Binding IntervalBetweenLaunches, Mode=TwoWay, Source={x:Static p:Settings.Default}}" MaxLines="1" MaxLength="2" Grid.Column="1"/>
-                    <Label Content="s" HorizontalAlignment="Left" Margin="84.568,160,0,0" VerticalAlignment="Top" Grid.Column="1"/>
+                    <TextBox x:Name="txtBulkLaunchInterval" Margin="158,160,0,0" TextWrapping="Wrap" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="38" RenderTransformOrigin="1.927,-3.718" Text="{Binding IntervalBetweenLaunches, Mode=TwoWay, Source={x:Static p:Settings.Default}}" MaxLines="1" MaxLength="2"/>
+                    <Label Content="s" HorizontalAlignment="Left" Margin="193,160,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
         </TabControl>

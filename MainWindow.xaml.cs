@@ -188,7 +188,7 @@ namespace Mag_ACClientLauncher
         private void cboLauncherServerList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (cboLauncherServerList.SelectedItem is Server server)
-                SetListAccountsSource(server.Accounts);
+                SelectServer(server.Id);
         }
 
         private void cmdAddServer_Click(object sender, RoutedEventArgs e)
@@ -352,6 +352,12 @@ namespace Mag_ACClientLauncher
         // =====================================
         // ========== BULK LAUNCH TAB ==========
         // =====================================
+
+        private void cboBulkLauncherServerList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cboBulkLauncherServerList.SelectedItem is Server server)
+                SelectServer(server.Id);
+        }
 
         private async void cmdBulkLaunch_Click(object sender, RoutedEventArgs e)
         {
