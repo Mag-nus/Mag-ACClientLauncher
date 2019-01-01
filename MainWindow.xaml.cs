@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,6 +21,8 @@ namespace Mag_ACClientLauncher
         public MainWindow()
         {
             InitializeComponent();
+
+            Title += " 1.1"; // Update line 55 in AssemblyInfo.cs
 
             if (Properties.Settings.Default.WindowPositionLeft != 0 && Properties.Settings.Default.WindowPositionTop != 0)
             {
@@ -359,10 +362,18 @@ namespace Mag_ACClientLauncher
                 SelectServer(server.Id);
         }
 
+        CancellationTokenSource bulkLaunchCTS;
+
         private async void cmdBulkLaunch_Click(object sender, RoutedEventArgs e)
         {
             if (cmdBulkLaunch.Content.ToString() == "Cancel")
             {
+                if (bulkLaunchCTS != null)
+                {
+                    bulkLaunchCTS.Cancel();
+                    bulkLaunchCTS = null;
+                }
+
                 cmdBulkLaunch.Content = "Bulk Launch";
                 return;
             }
@@ -372,7 +383,11 @@ namespace Mag_ACClientLauncher
             try
             {
                 if (cboBulkLauncherServerList.SelectedItem is Server server)
-                    await DoBulkLaunch(Properties.Settings.Default.BulkLaunchQuantity, Properties.Settings.Default.BulkLaunchStartIndex, Properties.Settings.Default.BulkLaunchUserNamePrefix, TimeSpan.FromSeconds(Properties.Settings.Default.IntervalBetweenLaunches), server);
+                {
+                    bulkLaunchCTS = new CancellationTokenSource();
+
+                    await DoBulkLaunch(Properties.Settings.Default.BulkLaunchQuantity, Properties.Settings.Default.BulkLaunchStartIndex, Properties.Settings.Default.BulkLaunchUserNamePrefix, TimeSpan.FromSeconds(Properties.Settings.Default.IntervalBetweenLaunches), server, bulkLaunchCTS.Token);
+                }
             }
             finally
             {
@@ -380,11 +395,11 @@ namespace Mag_ACClientLauncher
             }
         }
 
-        private async Task DoBulkLaunch(int launchQuantity, int startIndex, string userNamePrefix, TimeSpan interval, Server server)
+        private async Task DoBulkLaunch(int launchQuantity, int startIndex, string userNamePrefix, TimeSpan interval, Server server, CancellationToken token)
         {
             for (int i = startIndex; i < (startIndex + launchQuantity); i++)
             {
-                if (cmdBulkLaunch.Content.ToString() == "Bulk Launch")
+                if (token.IsCancellationRequested)
                     return;
 
                 var userName = userNamePrefix + i.ToString("00000");
@@ -401,7 +416,7 @@ namespace Mag_ACClientLauncher
                     break;
                 }
 
-                if (cmdBulkLaunch.Content.ToString() == "Bulk Launch")
+                if (token.IsCancellationRequested)
                     return;
 
                 await Task.Delay(interval);
