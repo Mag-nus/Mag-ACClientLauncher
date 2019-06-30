@@ -20,6 +20,14 @@ namespace Mag_ACClientLauncher
     {
         public MainWindow()
         {
+            if (String.IsNullOrWhiteSpace(Properties.Settings.Default.BulkLaunchPassword))
+            {
+                // Create a random password if one doesn't exist
+                var rand = new Random();
+                for (int i = 0; i < 16; i++)
+                    Properties.Settings.Default.BulkLaunchPassword += Convert.ToChar(rand.Next(97, 122));
+            }
+
             InitializeComponent();
 
             Title += " 1.1"; // Update line 55 in AssemblyInfo.cs
@@ -386,7 +394,7 @@ namespace Mag_ACClientLauncher
                 {
                     bulkLaunchCTS = new CancellationTokenSource();
 
-                    await DoBulkLaunch(Properties.Settings.Default.BulkLaunchQuantity, Properties.Settings.Default.BulkLaunchStartIndex, Properties.Settings.Default.BulkLaunchUserNamePrefix, TimeSpan.FromSeconds(Properties.Settings.Default.IntervalBetweenLaunches), server, bulkLaunchCTS.Token);
+                    await DoBulkLaunch(Properties.Settings.Default.BulkLaunchQuantity, Properties.Settings.Default.BulkLaunchStartIndex, Properties.Settings.Default.BulkLaunchUserNamePrefix, Properties.Settings.Default.BulkLaunchPassword, TimeSpan.FromSeconds(Properties.Settings.Default.IntervalBetweenLaunches), server, bulkLaunchCTS.Token);
                 }
             }
             finally
@@ -395,8 +403,14 @@ namespace Mag_ACClientLauncher
             }
         }
 
-        private async Task DoBulkLaunch(int launchQuantity, int startIndex, string userNamePrefix, TimeSpan interval, Server server, CancellationToken token)
+        private async Task DoBulkLaunch(int launchQuantity, int startIndex, string userNamePrefix, string password, TimeSpan interval, Server server, CancellationToken token)
         {
+            if (String.IsNullOrWhiteSpace(password))
+            {
+                MessageBox.Show("Password cannot be empty", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             for (int i = startIndex; i < (startIndex + launchQuantity); i++)
             {
                 if (token.IsCancellationRequested)
@@ -407,7 +421,7 @@ namespace Mag_ACClientLauncher
                 txtBulkLaunchStatus.Text += $"{DateTime.Now}: Launching user {userName}, connection {(i - startIndex) + 1} of {launchQuantity}" + Environment.NewLine;
                 txtBulkLaunchStatus.ScrollToEnd();
 
-                var account = new Account {UserName = userName, Password = "password"};
+                var account = new Account {UserName = userName, Password = password };
 
                 if (!DoLaunch(server, account))
                 {
