@@ -39,21 +39,6 @@
                     <Button x:Name="cmdLaunchAll" Content="Launch All" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="85" Click="cmdLaunchAll_Click" HorizontalContentAlignment="Center"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Bulk Launcher" HorizontalAlignment="Left" VerticalAlignment="Top">
-                <Grid Background="#FFE5E5E5">
-                    <ComboBox x:Name="cboBulkLauncherServerList" Margin="10,10,114,0" VerticalAlignment="Top" SelectionChanged="cboBulkLauncherServerList_SelectionChanged"/>
-                    <Label Content="Quantity to launch" HorizontalAlignment="Left" Margin="10,34,0,0" VerticalAlignment="Top"/>
-                    <TextBox x:Name="txtBulkLaunchQuantity" Margin="163,37,0,0" TextWrapping="Wrap" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="53" RenderTransformOrigin="1.927,-3.718" Text="{Binding BulkLaunchQuantity, Mode=TwoWay, Source={x:Static p:Settings.Default}}" MaxLength="5" MaxLines="1"/>
-                    <Label Content="Start launch at index" HorizontalAlignment="Left" Margin="10,62,0,0" VerticalAlignment="Top"/>
-                    <TextBox x:Name="txtBulkLaunchStartIndex" Margin="163,65,0,0" TextWrapping="Wrap" HorizontalAlignment="Left" Width="53" RenderTransformOrigin="1.927,-3.718" Height="23" VerticalAlignment="Top" Text="{Binding BulkLaunchStartIndex, Mode=TwoWay, Source={x:Static p:Settings.Default}}" MaxLength="5" MaxLines="1"/>
-                    <Label Content="User name prefix" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top"/>
-                    <TextBox x:Name="txtBulkLaunchUserNamePrefix" Margin="163,93,0,0" TextWrapping="Wrap" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="53" RenderTransformOrigin="1.927,-3.718" Text="{Binding BulkLaunchUserNamePrefix, Mode=TwoWay, Source={x:Static p:Settings.Default}}" MaxLines="1"/>
-                    <Button x:Name="cmdBulkLaunch" Content="Bulk Launch" Margin="226,95,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" RenderTransformOrigin="2.764,0.605" HorizontalAlignment="Left" Width="75" Click="cmdBulkLaunch_Click"/>
-                    <TextBox x:Name="txtBulkLaunchStatus" Margin="10,149,10,10" TextWrapping="Wrap" RenderTransformOrigin="1.927,-3.718" VerticalScrollBarVisibility="Auto" FontSize="10" FontFamily="Consolas"/>
-                    <Label Content="Password" HorizontalAlignment="Left" Margin="10,118,0,0" VerticalAlignment="Top"/>
-                    <TextBox x:Name="txtBulkLaunchPassword" Margin="163,121,0,0" TextWrapping="Wrap" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="138" RenderTransformOrigin="1.927,-3.718" Text="{Binding BulkLaunchPassword, Mode=TwoWay, Source={x:Static p:Settings.Default}}" MaxLines="1"/>
-                </Grid>
-            </TabItem>
             <TabItem Header="Options">
                 <Grid Background="#FFE5E5E5">
                     <TextBox x:Name="txtACClientLocation" HorizontalAlignment="Left" Height="23" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" IsReadOnly="True" Text="{Binding ACClientLocation, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Grid.ColumnSpan="2"/>

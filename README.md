@@ -15,6 +15,4 @@
 
 ![Launcher](/Docs/Images/Launcher.png?raw=true)
 
-![Launcher](/Docs/Images/Bulk%20Launcher.png?raw=true)
-
 ![Launcher](/Docs/Images/Options.png?raw=true)
