@@ -27,7 +27,7 @@ namespace Mag_ACClientLauncher
         {
             InitializeComponent();
 
-            Title += " 1.3"; // TODO: !!!!! ATTENTION ===== Update line 55 in AssemblyInfo.cs ===== ATTENTION !!!!!
+            Title += " 1.4"; // TODO: !!!!! ATTENTION ===== Update line 55 in AssemblyInfo.cs ===== ATTENTION !!!!!
 
             if (Properties.Settings.Default.WindowPositionLeft > 0 && Properties.Settings.Default.WindowPositionTop > 0)
             {

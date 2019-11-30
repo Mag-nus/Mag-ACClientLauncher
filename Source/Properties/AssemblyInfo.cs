@@ -52,4 +52,4 @@ using System.Windows;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.3")] // TODO: !!!!! ATTENTION ===== Update line 28 in MainWindow.xaml.cs ===== ATTENTION !!!!!
+[assembly: AssemblyFileVersion("1.4")] // TODO: !!!!! ATTENTION ===== Update line 28 in MainWindow.xaml.cs ===== ATTENTION !!!!!

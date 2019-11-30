@@ -28,6 +28,7 @@ namespace Mag_ACClientLauncher.ServerManagement
                     {
                         if (server.ServerType == "ACE")
                             server.EmuType = EmuType.ACE;
+
                         server.ServerType = null;
                     }
                 }

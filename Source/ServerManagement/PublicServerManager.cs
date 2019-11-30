@@ -10,7 +10,7 @@ namespace Mag_ACClientLauncher.ServerManagement
 {
     static class PublicServerManager
     {
-        public static readonly List<ServerItem> ServerList = new List<ServerItem>();
+        public static List<ServerItem> ServerList = new List<ServerItem>();
 
         public static readonly string ServerListFileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\Mag-ACClientLauncher\\PublicServerList.xml";
 
@@ -21,15 +21,20 @@ namespace Mag_ACClientLauncher.ServerManagement
                 if (!File.Exists(ServerListFileName))
                     return;
 
-                var xs = new XmlSerializer(typeof(List<ServerItem>));
-
                 using (var reader = new StreamReader(ServerListFileName))
-                    ServerList = (List<ServerItem>)xs.Deserialize(reader);
+                    ServerList = Deserialize(reader);
             }
             catch
             {
                 // ignored
             }
+        }
+
+        public static List<ServerItem> Deserialize(TextReader textReader)
+        {
+            var xs = new XmlSerializer(typeof(List<ServerItem>));
+
+            return (List<ServerItem>)xs.Deserialize(textReader);
         }
 
         public static DateTime GetLastUpdated()
@@ -51,10 +56,15 @@ namespace Mag_ACClientLauncher.ServerManagement
                 if (String.IsNullOrWhiteSpace(responseBody))
                     return false;
 
-                if (!ValidateContents(responseBody))
-                    return false;
+                var directoryName = Path.GetDirectoryName(ServerListFileName);
+
+                if (!Directory.Exists(directoryName))
+                    Directory.CreateDirectory(directoryName);
 
                 File.WriteAllText(ServerListFileName, responseBody);
+
+                using (var reader = new StringReader(responseBody))
+                    ServerList = Deserialize(reader);
 
                 return true;
 
@@ -65,18 +75,6 @@ namespace Mag_ACClientLauncher.ServerManagement
             }
 
             return false;
-        }
-
-        public static bool ValidateContents(string input)
-        {
-            var xs = new XmlSerializer(typeof(List<ServerItem>));
-
-            var tempServerList = new List<ServerItem>();
-
-            using (var reader = new StringReader(input))
-                tempServerList = (List<ServerItem>)xs.Deserialize(reader);
-
-            return tempServerList.Count > 0;
         }
     }
 }
