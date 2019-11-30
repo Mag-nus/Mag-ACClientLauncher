@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -81,12 +82,15 @@ namespace Mag_ACClientLauncher
 
             PopulateServerList(cboLauncherServerList, serversList);
 
+            PopulateServerList(cboBulkLauncherServerList, serversList);
+
             cmdEditServer.IsEnabled = (serversList.Count > 0);
             cmdDeleteServer.IsEnabled = (serversList.Count > 0);
 
             cmdAddAccounts.IsEnabled = (serversList.Count > 0);
 
             cmdLaunchChecked.IsEnabled = (serversList.Count > 0);
+            cmdBulkLaunch.IsEnabled = (serversList.Count > 0);
         }
 
         private void PopulateServerList(ComboBox comboBox, ICollection<Server> servers)
@@ -108,6 +112,16 @@ namespace Mag_ACClientLauncher
                     cboLauncherServerList.SelectedItem = item;
 
                     SetListAccountsSource(server.Accounts);
+
+                    break;
+                }
+            }
+
+            foreach (var item in cboBulkLauncherServerList.Items)
+            {
+                if (item is Server server && server.Id == id)
+                {
+                    cboBulkLauncherServerList.SelectedItem = item;
 
                     break;
                 }
@@ -470,6 +484,106 @@ namespace Mag_ACClientLauncher
             lstPublicServers.Items.Refresh();
 
             PopulateServerLists();
+        }
+
+
+        // =====================================
+        // ========== BULK LAUNCH TAB ==========
+        // =====================================
+
+        private void cboBulkLauncherServerList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cboBulkLauncherServerList.SelectedItem is Server server)
+                SelectServer(server.Id);
+        }
+
+        CancellationTokenSource bulkLaunchCTS;
+
+        private async void cmdBulkLaunch_Click(object sender, RoutedEventArgs e)
+        {
+            if (cmdBulkLaunch.Content.ToString() == "Cancel")
+            {
+                if (bulkLaunchCTS != null)
+                {
+                    bulkLaunchCTS.Cancel();
+                    bulkLaunchCTS = null;
+                }
+
+                cmdBulkLaunch.Content = "Bulk Launch";
+                return;
+            }
+
+            cmdBulkLaunch.Content = "Cancel";
+
+            try
+            {
+                if (cboBulkLauncherServerList.SelectedItem is Server server)
+                {
+                    bulkLaunchCTS = new CancellationTokenSource();
+
+                    await DoBulkLaunch(Properties.Settings.Default.BulkLaunchQuantity, Properties.Settings.Default.BulkLaunchStartIndex, Properties.Settings.Default.BulkLaunchUserNamePrefix, Properties.Settings.Default.BulkLaunchPassword, TimeSpan.FromSeconds(Properties.Settings.Default.IntervalBetweenLaunches), server, bulkLaunchCTS.Token);
+                }
+            }
+            finally
+            {
+                cmdBulkLaunch.Content = "Bulk Launch";
+            }
+        }
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        private const int SW_MINIMIZE = 6;
+
+        private void CmdMinimizeAll_Click(object sender, RoutedEventArgs e)
+        {
+            var processes = Process.GetProcessesByName("acclient");
+
+            foreach (var process in processes)
+                ShowWindow(process.MainWindowHandle, SW_MINIMIZE);
+        }
+
+        private void cmdBulkCloseAll_Click(object sender, RoutedEventArgs e)
+        {
+            var processes = Process.GetProcessesByName("acclient");
+
+            foreach (var process in processes)
+                process.CloseMainWindow();
+        }
+
+        private async Task DoBulkLaunch(int launchQuantity, int startIndex, string userNamePrefix, string password, TimeSpan interval, Server server, CancellationToken token)
+        {
+            if (String.IsNullOrWhiteSpace(password))
+            {
+                MessageBox.Show("Password cannot be empty", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            for (int i = startIndex; i < (startIndex + launchQuantity); i++)
+            {
+                if (token.IsCancellationRequested)
+                    return;
+
+                var userName = userNamePrefix + i.ToString("00000");
+
+                txtBulkLaunchStatus.Text += $"{DateTime.Now}: Launching user {userName}, connection {(i - startIndex) + 1} of {launchQuantity}" + Environment.NewLine;
+                txtBulkLaunchStatus.ScrollToEnd();
+
+                var account = new Account { UserName = userName, Password = password };
+
+                if (!DoLaunch(server, account))
+                {
+                    txtBulkLaunchStatus.Text += $"{DateTime.Now}: Launching user {userName}, connection {(i - startIndex) + 1} of {launchQuantity} FAILED" + Environment.NewLine;
+                    txtBulkLaunchStatus.ScrollToEnd();
+                    break;
+                }
+
+                if (token.IsCancellationRequested)
+                    return;
+
+                await Task.Delay(interval);
+            }
         }
 
 

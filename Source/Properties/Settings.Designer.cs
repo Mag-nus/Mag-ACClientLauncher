@@ -142,5 +142,53 @@ namespace Mag_ACClientLauncher.Properties {
                 this["WindowSizeHeight"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int BulkLaunchQuantity {
+            get {
+                return ((int)(this["BulkLaunchQuantity"]));
+            }
+            set {
+                this["BulkLaunchQuantity"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int BulkLaunchStartIndex {
+            get {
+                return ((int)(this["BulkLaunchStartIndex"]));
+            }
+            set {
+                this["BulkLaunchStartIndex"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("test_")]
+        public string BulkLaunchUserNamePrefix {
+            get {
+                return ((string)(this["BulkLaunchUserNamePrefix"]));
+            }
+            set {
+                this["BulkLaunchUserNamePrefix"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string BulkLaunchPassword {
+            get {
+                return ((string)(this["BulkLaunchPassword"]));
+            }
+            set {
+                this["BulkLaunchPassword"] = value;
+            }
+        }
     }
 }

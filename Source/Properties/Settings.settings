@@ -32,5 +32,17 @@
     <Setting Name="WindowSizeHeight" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="BulkLaunchQuantity" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="BulkLaunchStartIndex" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="BulkLaunchUserNamePrefix" Type="System.String" Scope="User">
+      <Value Profile="(Default)">test_</Value>
+    </Setting>
+    <Setting Name="BulkLaunchPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>
