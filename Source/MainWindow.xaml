@@ -6,8 +6,18 @@
         xmlns:p="clr-namespace:Mag_ACClientLauncher.Properties"
         xmlns:ServerManagement="clr-namespace:Mag_ACClientLauncher.ServerManagement" x:Class="Mag_ACClientLauncher.MainWindow"
         mc:Ignorable="d"
-        Title="Mag-ACClientLauncher" Height="300" Width="515" MinWidth="400" MinHeight="240">
+        Title="Mag-ACClientLauncher" Height="400" Width="600" MinWidth="500" MinHeight="240">
     <Grid>
+        <Grid.Resources>
+            <Style TargetType="ListViewItem">
+                <Style.Triggers>
+
+                    <Trigger Property="ItemsControl.AlternationIndex"  Value="1">
+                        <Setter Property="Background" Value="WhiteSmoke" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Resources>
         <TabControl UseLayoutRounding="False">
             <TabItem Header="Launcher">
                 <Grid Background="#FFE5E5E5">
@@ -36,21 +46,54 @@
                     <Button x:Name="cmdAddAccounts" Content="Add Accounts" Margin="0,0,13,60" HorizontalAlignment="Right" Width="90" Click="cmdAddAccounts_Click" Height="20" VerticalAlignment="Bottom"/>
                     <Button x:Name="cmdEditAccount" Content="Edit Account" Margin="0,0,13,35" HorizontalAlignment="Right" Width="90" IsEnabled="False" Click="cmdEditAccount_Click" Height="20" VerticalAlignment="Bottom"/>
                     <Button x:Name="cmdDeleteAccount" Content="Delete Account" Margin="0,0,13,10" HorizontalAlignment="Right" Width="90" IsEnabled="False" Click="cmdDeleteAccount_Click" Height="20" VerticalAlignment="Bottom"/>
-                    <Button x:Name="cmdLaunchAll" Content="Launch All" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="85" Click="cmdLaunchAll_Click" HorizontalContentAlignment="Center"/>
+                    <Button x:Name="cmdLaunchChecked" Content="Launch Checked" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="107" Click="cmdLaunchChecked_Click" HorizontalContentAlignment="Center"/>
+                    <Button x:Name="cmdCancelLaunchChecked" Content="Cancel Launch Checked" HorizontalAlignment="Left" Margin="122,0,0,10" VerticalAlignment="Bottom" Width="145" Click="cmdCancelLaunchChecked_Click" HorizontalContentAlignment="Center" IsEnabled="False"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Server Browser">
+                <Grid Background="#FFE5E5E5">
+                    <Button x:Name="btnDownloadServerBrowserList" Content="Download from Public Server List" Margin="0,10,10,0" HorizontalAlignment="Right" Width="188" Height="20" VerticalAlignment="Top" Click="BtnDownloadServerBrowserList_Click"/>
+                    <ListView x:Name="lstPublicServers" Margin="10,35,10,10" AlternationCount="2">
+                        <ListView.Resources>
+                            <Style TargetType="{x:Type GridViewColumnHeader}">
+                                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                            </Style>
+                        </ListView.Resources>
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="False">
+                                <GridViewColumn Width="60">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Margin="0" Width="48" VerticalAlignment="Center" Content="{Binding Path=(ServerManagement:ServerItem.Action)}" Click="cmdServerBrowserAction_Click" Background="{Binding Path=(ServerManagement:ServerItem.ActionBackground)}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Path=(ServerManagement:ServerItem.name)}"/>
+                                <GridViewColumn Header="Emu" Width="40" DisplayMemberBinding="{Binding Path=(ServerManagement:ServerItem.emu)}"/>
+                                <GridViewColumn Header="Type" Width="40" DisplayMemberBinding="{Binding Path=(ServerManagement:ServerItem.type)}"/>
+                                <GridViewColumn Header="Host" DisplayMemberBinding="{Binding Path=(ServerManagement:ServerItem.ServerHostAndPort)}"/>
+                                <GridViewColumn Header="Description" DisplayMemberBinding="{Binding Path=(ServerManagement:ServerItem.ExtendedDescription)}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Label x:Name="lblReloadTime" Content="Downloaded:" Margin="0,7,203,0" VerticalAlignment="Top" HorizontalAlignment="Right"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Options">
                 <Grid Background="#FFE5E5E5">
-                    <TextBox x:Name="txtACClientLocation" HorizontalAlignment="Left" Height="23" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" IsReadOnly="True" Text="{Binding ACClientLocation, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Grid.ColumnSpan="2"/>
-                    <Label Content="ACClient.exe Location" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-                    <Button x:Name="btnACClientLocation" Content="..." HorizontalAlignment="Left" Margin="315,37,0,0" VerticalAlignment="Top" Width="28" Click="btnACClientLocation_Click"/>
-                    <TextBox x:Name="txtDecalInjectLocation" HorizontalAlignment="Left" Height="23" Margin="10,95,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" IsReadOnly="True" Text="{Binding DecalInjectLocation, Mode=TwoWay, Source={x:Static p:Settings.Default}}" Grid.ColumnSpan="2"/>
-                    <Label Content="Decal Location" HorizontalAlignment="Left" Margin="10,69,0,0" VerticalAlignment="Top"/>
-                    <Button x:Name="btnDecalInjectLocation" Content="..." HorizontalAlignment="Left" Margin="315,96,0,0" VerticalAlignment="Top" Width="28" Click="btnDecalLocation_Click"/>
-                    <CheckBox x:Name="chkInjectDecal" Content="Inject Decal" HorizontalAlignment="Left" Margin="10,128,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.041,3.396" IsChecked="{Binding InjectDecal, Mode=TwoWay, Source={x:Static p:Settings.Default}}"/>
-                    <Label Content="Interval between launches" HorizontalAlignment="Left" Margin="10,157,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-                    <TextBox x:Name="txtBulkLaunchInterval" Margin="158,160,0,0" TextWrapping="Wrap" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="38" RenderTransformOrigin="1.927,-3.718" Text="{Binding IntervalBetweenLaunches, Mode=TwoWay, Source={x:Static p:Settings.Default}}" MaxLines="1" MaxLength="2"/>
-                    <Label Content="s" HorizontalAlignment="Left" Margin="193,160,0,0" VerticalAlignment="Top"/>
+                    <Label Content="ACClient.exe Location:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                    <Button x:Name="btnACClientLocation" Content="..." HorizontalAlignment="Right" Margin="0,13,10,0" VerticalAlignment="Top" Width="28" Click="btnACClientLocation_Click" Height="23"/>
+                    <Label Content="Decal Location:" HorizontalAlignment="Left" Margin="10,38,0,0" VerticalAlignment="Top"/>
+                    <Button x:Name="btnDecalInjectLocation" Content="..." HorizontalAlignment="Right" Margin="0,41,10,0" VerticalAlignment="Top" Width="28" Click="btnDecalLocation_Click" Height="23"/>
+                    <CheckBox x:Name="chkInjectDecal" Content="Inject Decal" HorizontalAlignment="Left" Margin="142,69,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.041,3.396" IsChecked="{Binding InjectDecal, Mode=TwoWay, Source={x:Static p:Settings.Default}}"/>
+                    <Label Content="Interval between launches:" HorizontalAlignment="Left" Margin="10,155,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="txtBulkLaunchInterval" Margin="165,158,0,0" TextWrapping="Wrap" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="38" RenderTransformOrigin="1.927,-3.718" Text="{Binding IntervalBetweenLaunches, Mode=TwoWay, Source={x:Static p:Settings.Default}}" MaxLines="1" MaxLength="2"/>
+                    <Label Content="s" HorizontalAlignment="Left" Margin="200,158,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="txtDecalInjectLocation" Height="23" Margin="142,41,43,0" VerticalAlignment="Top" IsReadOnly="True" Text="{Binding DecalInjectLocation, Mode=TwoWay, Source={x:Static p:Settings.Default}}" HorizontalScrollBarVisibility="Disabled"/>
+                    <TextBox x:Name="txtACClientLocation" Height="23" Margin="142,13,43,0" VerticalAlignment="Top" IsReadOnly="True" Text="{Binding ACClientLocation, Mode=TwoWay, Source={x:Static p:Settings.Default}}" HorizontalScrollBarVisibility="Disabled"/>
+                    <Label Content="Public Server List:" HorizontalAlignment="Left" Margin="10,93,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="txtPublicServerList" Height="23" Margin="10,115,10,0" VerticalAlignment="Top" Text="{Binding PublicServerListUrl, Mode=TwoWay, Source={x:Static p:Settings.Default}}" HorizontalScrollBarVisibility="Disabled"/>
+                    <Button x:Name="btnPublicServerListDefault" Content="Load Default" HorizontalAlignment="Right" Margin="0,89,10,0" VerticalAlignment="Top" Width="90" Click="btnPublicServerListDefault_Click" Height="21" RenderTransformOrigin="4.464,0.599"/>
                 </Grid>
             </TabItem>
         </TabControl>

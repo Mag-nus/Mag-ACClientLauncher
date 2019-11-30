@@ -9,7 +9,10 @@ namespace Mag_ACClientLauncher.ServerManagement
 
         public string Name;
 
-        public ServerType ServerType;
+        // Backwards compatability
+        public string ServerType;
+
+        public EmuType EmuType;
 
         public string Address;
         public ushort Port;
@@ -20,7 +23,7 @@ namespace Mag_ACClientLauncher.ServerManagement
 
         public override string ToString()
         {
-            return $"{Name} - {ServerType} {Address}:{Port}";
+            return $"{Name} - {EmuType}, {Address}:{Port}";
         }
     }
 }

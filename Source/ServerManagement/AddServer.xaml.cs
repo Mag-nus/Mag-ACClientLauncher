@@ -27,8 +27,8 @@ namespace Mag_ACClientLauncher.ServerManagement
             Title = "Edit A Server";
             btnAdd.Content = "Save";
 
-            rdACEServer.IsChecked = (Server.ServerType == ServerType.ACE);
-            rdGDLServer.IsChecked = (Server.ServerType == ServerType.GDL);
+            rdACEServer.IsChecked = (Server.EmuType == EmuType.ACE);
+            rdGDLServer.IsChecked = (Server.EmuType == EmuType.GDL);
             txtServerName.Text = Server.Name;
             txtServerAddress.Text = Server.Address;
             txtServerPort.Text = Server.Port.ToString();
@@ -88,8 +88,8 @@ namespace Mag_ACClientLauncher.ServerManagement
                 return false;
             }
 
-            if (rdACEServer.IsChecked != null && rdACEServer.IsChecked.Value) Server.ServerType = ServerType.ACE;
-            if (rdGDLServer.IsChecked != null && rdGDLServer.IsChecked.Value) Server.ServerType = ServerType.GDL;
+            if (rdACEServer.IsChecked != null && rdACEServer.IsChecked.Value) Server.EmuType = EmuType.ACE;
+            if (rdGDLServer.IsChecked != null && rdGDLServer.IsChecked.Value) Server.EmuType = EmuType.GDL;
             Server.Name = txtServerName.Text;
             Server.Address = txtServerAddress.Text;
             Server.Port = port;

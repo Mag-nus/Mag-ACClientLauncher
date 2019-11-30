@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,16 +19,26 @@ namespace Mag_ACClientLauncher
     /// </summary>
     public partial class MainWindow
     {
+        private const string DefaultPublicServerListUri = "https://raw.githubusercontent.com/acresources/serverslist/master/Servers.xml";
+
+        private static readonly HttpClient httpClient = new HttpClient();
+
         public MainWindow()
         {
             InitializeComponent();
 
-            Title += " 1.2"; // Update line 55 in AssemblyInfo.cs
+            Title += " 1.3"; // TODO: !!!!! ATTENTION ===== Update line 55 in AssemblyInfo.cs ===== ATTENTION !!!!!
 
-            if (Properties.Settings.Default.WindowPositionLeft != 0 && Properties.Settings.Default.WindowPositionTop != 0)
+            if (Properties.Settings.Default.WindowPositionLeft > 0 && Properties.Settings.Default.WindowPositionTop > 0)
             {
                 Left = Properties.Settings.Default.WindowPositionLeft;
                 Top = Properties.Settings.Default.WindowPositionTop;
+            }
+
+            if (Properties.Settings.Default.WindowSizeWidth >= MinWidth && Properties.Settings.Default.WindowSizeHeight >= MinHeight)
+            {
+                Width = Properties.Settings.Default.WindowSizeWidth;
+                Height = Properties.Settings.Default.WindowSizeHeight;
             }
 
             PopulateServerLists();
@@ -41,12 +53,17 @@ namespace Mag_ACClientLauncher
                 }
                 catch { /* ignored */ }
             }
+
+            ReloadServerBrowserListView();
         }
 
         protected override void OnClosing(CancelEventArgs e)
         {
             Properties.Settings.Default.WindowPositionLeft = Left;
             Properties.Settings.Default.WindowPositionTop = Top;
+
+            Properties.Settings.Default.WindowSizeWidth = Width;
+            Properties.Settings.Default.WindowSizeHeight = Height;
 
             if (cboLauncherServerList.SelectedItem is Server server)
                 Properties.Settings.Default.SelectedServer = server.Id.ToString();
@@ -69,7 +86,7 @@ namespace Mag_ACClientLauncher
 
             cmdAddAccounts.IsEnabled = (serversList.Count > 0);
 
-            cmdLaunchAll.IsEnabled = (serversList.Count > 0);
+            cmdLaunchChecked.IsEnabled = (serversList.Count > 0);
         }
 
         private void PopulateServerList(ComboBox comboBox, ICollection<Server> servers)
@@ -136,13 +153,13 @@ namespace Mag_ACClientLauncher
 
             string arguments;
 
-            if (server.ServerType == ServerType.ACE)
+            if (server.EmuType == EmuType.ACE)
                 arguments = "-h " + server.Address + " -p " + server.Port + " -a " + account.UserName + " -v " + account.Password;
-            else if (server.ServerType == ServerType.GDL)
+            else if (server.EmuType == EmuType.GDL)
                 arguments = "-h " + server.Address + " -p " + server.Port + " -a " + account.UserName + ":" + account.Password;
             else
             {
-                MessageBox.Show($"Launching for server type {server.ServerType} has not been implemented.");
+                MessageBox.Show($"Launching for server type {server.EmuType} has not been implemented.");
                 return false;
             }
 
@@ -208,6 +225,8 @@ namespace Mag_ACClientLauncher
                     ServerManager.SaveServerListToDisk();
                     PopulateServerLists();
                     SelectServer(server.Id);
+
+                    ReloadServerBrowserListView();
                 }
             }
         }
@@ -216,12 +235,14 @@ namespace Mag_ACClientLauncher
         {
             if (cboLauncherServerList.SelectedItem is Server server)
             {
-                var result = MessageBox.Show($"Are you sure you want to delete the server: {server}{Environment.NewLine}{Environment.NewLine}This will also delete any associated accounts!", "Confirm Deletion", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                var result = MessageBox.Show($"Are you sure you want to delete the server:{Environment.NewLine}{server}{Environment.NewLine}{Environment.NewLine}This will also delete any associated accounts!", "Confirm Deletion", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
                 if (result == MessageBoxResult.Yes)
                 {
                     ServerManager.DeleteServerById(server.Id);
                     PopulateServerLists();
+
+                    ReloadServerBrowserListView();
                 }
             }
         }
@@ -311,9 +332,14 @@ namespace Mag_ACClientLauncher
             }
         }
 
-        private async void cmdLaunchAll_Click(object sender, RoutedEventArgs e)
+        private CancellationTokenSource cmdLaunchAllCTS;
+
+        private async void cmdLaunchChecked_Click(object sender, RoutedEventArgs e)
         {
-            cmdLaunchAll.IsEnabled = false;
+            cmdLaunchChecked.IsEnabled = false;
+            cmdCancelLaunchChecked.IsEnabled = true;
+
+            cmdLaunchAllCTS = new CancellationTokenSource();
 
             try
             {
@@ -321,20 +347,129 @@ namespace Mag_ACClientLauncher
                 {
                     foreach (var account in server.Accounts)
                     {
+                        if (!cmdCancelLaunchChecked.IsEnabled)
+                            return;
+
                         if (account.Launch)
                         {
                             if (!DoLaunch(server, account))
                                 return;
 
-                            await Task.Delay(1000);
+                            if (!cmdCancelLaunchChecked.IsEnabled)
+                                return;
+
+                            if (Properties.Settings.Default.IntervalBetweenLaunches > 0)
+                                await Task.Delay(Properties.Settings.Default.IntervalBetweenLaunches * 1000, cmdLaunchAllCTS.Token);
                         }
                     }
+
+                    if (!cmdCancelLaunchChecked.IsEnabled)
+                        return;
+
+                    await Task.Delay(1000, cmdLaunchAllCTS.Token); // Prevent accidental double clicks
                 }
+            }
+            catch (TaskCanceledException)
+            {
+                // do nothing
             }
             finally
             {
-                cmdLaunchAll.IsEnabled = true;
+                cmdCancelLaunchChecked.IsEnabled = false;
+                cmdLaunchChecked.IsEnabled = true;
             }
+        }
+
+        private void cmdCancelLaunchChecked_Click(object sender, RoutedEventArgs e)
+        {
+            cmdCancelLaunchChecked.IsEnabled = false;
+            cmdLaunchAllCTS.Cancel();
+        }
+
+
+        // =================================
+        // ======= SERVER BROWSER TAB ======
+        // =================================
+
+        private void ReloadServerBrowserListView()
+        {
+            var lastUpdated = PublicServerManager.GetLastUpdated();
+            lblReloadTime.Content = lastUpdated == DateTime.MinValue ? "" : "Downloaded: " + lastUpdated;
+
+            lstPublicServers.Items.Clear();
+
+            foreach (var server in PublicServerManager.ServerList)
+            {
+                var localDefinedServer = ServerManager.FindByGuid(server.id);
+
+                if (localDefinedServer == null)
+                    server.Action = "Import";
+                else
+                {
+                    if (localDefinedServer.Name != server.name || localDefinedServer.Address != server.server_host || localDefinedServer.Port != server.server_port)
+                        server.Action = "Update";
+                    else
+                        server.Action = null;
+                }
+
+                lstPublicServers.Items.Add(server);
+            }
+        }
+
+        private async void BtnDownloadServerBrowserList_Click(object sender, RoutedEventArgs e)
+        {
+            btnDownloadServerBrowserList.IsEnabled = false;
+
+            try
+            {
+                var publicServerListUrl = Properties.Settings.Default.PublicServerListUrl;
+
+                if (String.IsNullOrWhiteSpace(publicServerListUrl) || !Uri.TryCreate(publicServerListUrl, UriKind.Absolute, out var uri))
+                {
+                    MessageBox.Show("Server list is not a valid Uri:" + Environment.NewLine + publicServerListUrl, "BtnDownloadServerBrowserList_Click", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                if (await PublicServerManager.UpdateFromPublicServerList(httpClient, uri))
+                    ReloadServerBrowserListView();
+            }
+            finally
+            {
+                btnDownloadServerBrowserList.IsEnabled = true;
+            }
+        }
+
+        private void cmdServerBrowserAction_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            var server = button.DataContext as ServerItem;
+
+            if (server.Action == "Import")
+            {
+                if (!ServerManager.TryImport(server))
+                {
+                    MessageBox.Show("TryImport failed.", "cmdServerBrowserAction_Click", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+            }
+            else if (server.Action == "Update")
+            {
+                // todo should we add confirmation?
+
+                if (!ServerManager.TryUpdate(server))
+                {
+                    MessageBox.Show("TryUpdate failed.", "cmdServerBrowserAction_Click", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+            }
+            //else
+            //    MessageBox.Show($"Unknown action: {server.Action}", "cmdServerBrowserAction_Click", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            server.Action = null;
+
+            lstPublicServers.Items.Refresh();
+
+            PopulateServerLists();
         }
 
 
@@ -376,6 +511,14 @@ namespace Mag_ACClientLauncher
             // Get the selected file name and display in a TextBox
             if (result == true)
                 txtDecalInjectLocation.Text = dialog.FileName;
+        }
+
+        private void btnPublicServerListDefault_Click(object sender, RoutedEventArgs e)
+        {
+            var dialogResult = MessageBox.Show("This will reset your public server list to:" + Environment.NewLine + DefaultPublicServerListUri, "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (dialogResult == MessageBoxResult.Yes)
+                Properties.Settings.Default.PublicServerListUrl = DefaultPublicServerListUri;
         }
     }
 }

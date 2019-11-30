@@ -106,5 +106,41 @@ namespace Mag_ACClientLauncher.Properties {
                 this["WindowPositionTop"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://raw.githubusercontent.com/acresources/serverslist/master/Servers.xml")]
+        public string PublicServerListUrl {
+            get {
+                return ((string)(this["PublicServerListUrl"]));
+            }
+            set {
+                this["PublicServerListUrl"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double WindowSizeWidth {
+            get {
+                return ((double)(this["WindowSizeWidth"]));
+            }
+            set {
+                this["WindowSizeWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double WindowSizeHeight {
+            get {
+                return ((double)(this["WindowSizeHeight"]));
+            }
+            set {
+                this["WindowSizeHeight"] = value;
+            }
+        }
     }
 }
