@@ -10,7 +10,7 @@ namespace Mag_ACClientLauncher.ServerManagement
 {
     static class PublicServerManager
     {
-        public static List<ServerItem> ServerList = new List<ServerItem>();
+        public static List<ServerItem> ServerList { get; private set; } = new List<ServerItem>();
 
         public static readonly string ServerListFileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\Mag-ACClientLauncher\\PublicServerList.xml";
 
@@ -56,15 +56,15 @@ namespace Mag_ACClientLauncher.ServerManagement
                 if (String.IsNullOrWhiteSpace(responseBody))
                     return false;
 
+                using (var reader = new StringReader(responseBody))
+                    ServerList = Deserialize(reader);
+
                 var directoryName = Path.GetDirectoryName(ServerListFileName);
 
                 if (!Directory.Exists(directoryName))
                     Directory.CreateDirectory(directoryName);
 
                 File.WriteAllText(ServerListFileName, responseBody);
-
-                using (var reader = new StringReader(responseBody))
-                    ServerList = Deserialize(reader);
 
                 return true;
 

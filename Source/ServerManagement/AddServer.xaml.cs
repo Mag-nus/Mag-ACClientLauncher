@@ -32,7 +32,29 @@ namespace Mag_ACClientLauncher.ServerManagement
             txtServerName.Text = Server.Name;
             txtServerAddress.Text = Server.Address;
             txtServerPort.Text = Server.Port.ToString();
+            txtACClientLocationOverride.Text = server.ACClientLocationOverride;
             cmbDefaultRodat.SelectedValue = Server.ReadOnlyDat ? "true" : "false";
+            if (server.InjectDecalOverride == 0) cmbInjectDecalOverride.SelectedValue = "No Change";
+            if (server.InjectDecalOverride == 1) cmbInjectDecalOverride.SelectedValue = "Yes";
+            if (server.InjectDecalOverride == 2) cmbInjectDecalOverride.SelectedValue = "No";
+        }
+
+        private void BtnACClientLocationOverride_Click(object sender, RoutedEventArgs e)
+        {
+            // Create OpenFileDialog
+            var dialog = new Microsoft.Win32.OpenFileDialog();
+            dialog.InitialDirectory = "C:\\Turbine\\Asheron's Call";
+
+            // Set filter for file extension and default file extension
+            dialog.DefaultExt = ".exe";
+            dialog.Filter = "Executables (exe)|*.exe|All files (*.*)|*.*";
+
+            // Display OpenFileDialog by calling ShowDialog method
+            var result = dialog.ShowDialog();
+
+            // Get the selected file name and display in a TextBox
+            if (result == true)
+                txtACClientLocationOverride.Text = dialog.FileName;
         }
 
         private void btnAdd_Click(object sender, RoutedEventArgs e)
@@ -93,7 +115,11 @@ namespace Mag_ACClientLauncher.ServerManagement
             Server.Name = txtServerName.Text;
             Server.Address = txtServerAddress.Text;
             Server.Port = port;
+            Server.ACClientLocationOverride = txtACClientLocationOverride.Text;
             Server.ReadOnlyDat = (cmbDefaultRodat.SelectedValue.ToString() == "true");
+            if (cmbInjectDecalOverride.SelectedValue.ToString() == "No Change") Server.InjectDecalOverride = 0;
+            if (cmbInjectDecalOverride.SelectedValue.ToString() == "Yes") Server.InjectDecalOverride = 1;
+            if (cmbInjectDecalOverride.SelectedValue.ToString() == "No") Server.InjectDecalOverride = 2;
 
             return true;
         }

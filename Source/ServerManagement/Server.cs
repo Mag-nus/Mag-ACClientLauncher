@@ -17,7 +17,15 @@ namespace Mag_ACClientLauncher.ServerManagement
         public string Address;
         public ushort Port;
 
+        public string ACClientLocationOverride;
         public bool ReadOnlyDat;
+
+        /// <summary>
+        /// 0 = No Change
+        /// 1 = Yes
+        /// 2 = No
+        /// </summary>
+        public byte InjectDecalOverride;
 
         public readonly ObservableCollection<Account> Accounts = new ObservableCollection<Account>();
 

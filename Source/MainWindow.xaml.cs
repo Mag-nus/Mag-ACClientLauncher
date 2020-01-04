@@ -27,7 +27,7 @@ namespace Mag_ACClientLauncher
         {
             InitializeComponent();
 
-            Title += " 1.5"; // TODO: !!!!! ATTENTION ===== Update line 55 in AssemblyInfo.cs ===== ATTENTION !!!!!
+            Title += " 1.6"; // TODO: !!!!! ATTENTION ===== Update line 55 in AssemblyInfo.cs ===== ATTENTION !!!!!
 
             if (Properties.Settings.Default.WindowPositionLeft > 0 && Properties.Settings.Default.WindowPositionTop > 0)
             {
@@ -124,16 +124,26 @@ namespace Mag_ACClientLauncher
 
         private bool DoLaunch(Server server, Account account)
         {
-            var acClientExeLocation = Properties.Settings.Default.ACClientLocation;
+            string acClientExeLocation;
+
+            if (!String.IsNullOrWhiteSpace(server.ACClientLocationOverride))
+                acClientExeLocation = server.ACClientLocationOverride;
+            else
+                acClientExeLocation = Properties.Settings.Default.ACClientLocation;
             var decalInjectLocation = Properties.Settings.Default.DecalInjectLocation;
 
             if (String.IsNullOrEmpty(acClientExeLocation) || !File.Exists(acClientExeLocation))
             {
-                MessageBox.Show("AC Client location doesn't exist.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"AC Client location doesn't exist:{Environment.NewLine}{acClientExeLocation}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
-            if (Properties.Settings.Default.InjectDecal && (String.IsNullOrEmpty(decalInjectLocation) || !File.Exists(decalInjectLocation)))
+            bool injectDecal = Properties.Settings.Default.InjectDecal;
+
+            if (server.InjectDecalOverride == 1) injectDecal = true;
+            if (server.InjectDecalOverride == 2) injectDecal = false;
+
+            if (injectDecal && (String.IsNullOrEmpty(decalInjectLocation) || !File.Exists(decalInjectLocation)))
             {
                 MessageBox.Show("Decal location doesn't exist.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
@@ -168,7 +178,7 @@ namespace Mag_ACClientLauncher
                 arguments += " -rodat";
 
 
-            if (!Properties.Settings.Default.InjectDecal)
+            if (!injectDecal)
             {
                 var startInfo = new ProcessStartInfo();
                 startInfo.FileName = acClientExeLocation;
