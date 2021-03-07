@@ -28,7 +28,7 @@ namespace Mag_ACClientLauncher
         {
             InitializeComponent();
 
-            Title += " 1.3"; // TODO: !!!!! ATTENTION ===== Update line 55 in AssemblyInfo.cs ===== ATTENTION !!!!!
+            Title += " 1.5"; // TODO: !!!!! ATTENTION ===== Update line 55 in AssemblyInfo.cs ===== ATTENTION !!!!!
 
             if (Properties.Settings.Default.WindowPositionLeft > 0 && Properties.Settings.Default.WindowPositionTop > 0)
             {
@@ -606,7 +606,7 @@ namespace Mag_ACClientLauncher
 
             // Get the selected file name and display in a TextBox
             if (result == true)
-                txtACClientLocation.Text = dialog.FileName;
+                Properties.Settings.Default.ACClientLocation = dialog.FileName;
         }
 
         private void btnDecalLocation_Click(object sender, RoutedEventArgs e)
@@ -624,7 +624,7 @@ namespace Mag_ACClientLauncher
 
             // Get the selected file name and display in a TextBox
             if (result == true)
-                txtDecalInjectLocation.Text = dialog.FileName;
+                Properties.Settings.Default.DecalInjectLocation = dialog.FileName;
         }
 
         private void btnPublicServerListDefault_Click(object sender, RoutedEventArgs e)
