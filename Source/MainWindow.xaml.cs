@@ -190,14 +190,35 @@ namespace Mag_ACClientLauncher
                 startInfo.CreateNoWindow = true;
                 startInfo.WorkingDirectory = Path.GetDirectoryName(acClientExeLocation) ?? throw new InvalidOperationException();
 
-                Process.Start(startInfo);
-            }
-            else
-            {
-                return Injector.RunSuspendedCommaInjectCommaAndResume(acClientExeLocation, arguments, decalInjectLocation, "DecalStartup");
-            }
+                var process = Process.Start(startInfo);
 
-            return true;
+                ProcessLaunchInfoQueue.Enqueue(new ProcessLaunchInfo
+                {
+                    server = server,
+                    account = account,
+
+					Process = process,
+				});
+			}
+			else
+            {
+	            var dwProcessId = Injector.RunSuspendedCommaInjectCommaAndResume(acClientExeLocation, arguments, decalInjectLocation, "DecalStartup");
+
+                if (dwProcessId == -1)
+                    return false;
+
+				ProcessLaunchInfoQueue.Enqueue(new ProcessLaunchInfo
+				{
+					server = server,
+					account = account,
+
+                    Process = Process.GetProcessById(dwProcessId),
+                });
+
+				return true;
+			}
+
+			return true;
         }
 
 
@@ -491,6 +512,56 @@ namespace Mag_ACClientLauncher
         // ========== BULK LAUNCH TAB ==========
         // =====================================
 
+        private class ProcessLaunchInfo
+        {
+	        public DateTime LaunchTime = DateTime.UtcNow;
+
+	        public Server server;
+	        public Account account;
+
+			public Process Process;
+        }
+
+        private readonly Queue<ProcessLaunchInfo> ProcessLaunchInfoQueue = new Queue<ProcessLaunchInfo>();
+
+        private System.Windows.Threading.DispatcherTimer dispatcherTimer;
+
+        private async void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(txtBulkLaunchRestartAfterHrs.Text))
+                return;
+
+            if (!int.TryParse(txtBulkLaunchRestartAfterHrs.Text, out var restartPeriodInHours))
+                return;
+
+            if (restartPeriodInHours == 0)
+                return;
+
+	        var peek = ProcessLaunchInfoQueue.Peek();
+
+            if (peek.LaunchTime + TimeSpan.FromHours(restartPeriodInHours) > DateTime.UtcNow)
+                return;
+
+            peek = ProcessLaunchInfoQueue.Dequeue();
+
+            txtBulkLaunchStatus.Text += $"{DateTime.Now}: Killing user {peek.account.UserName}" + Environment.NewLine;
+            txtBulkLaunchStatus.ScrollToEnd();
+
+            peek.Process.CloseMainWindow();
+
+            await Task.Delay(TimeSpan.FromSeconds(20));
+
+            txtBulkLaunchStatus.Text += $"{DateTime.Now}: Relaunching user {peek.account.UserName}" + Environment.NewLine;
+            txtBulkLaunchStatus.ScrollToEnd();
+
+            if (!DoLaunch(peek.server, peek.account))
+            {
+	            txtBulkLaunchStatus.Text += $"{DateTime.Now}: Relaunching user {peek.account.UserName} FAILED" + Environment.NewLine;
+	            txtBulkLaunchStatus.ScrollToEnd();
+            }
+        }
+
+ 
         private void cboBulkLauncherServerList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (cboBulkLauncherServerList.SelectedItem is Server server)
@@ -501,6 +572,14 @@ namespace Mag_ACClientLauncher
 
         private async void cmdBulkLaunch_Click(object sender, RoutedEventArgs e)
         {
+	        if (dispatcherTimer == null)
+	        {
+		        dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+		        dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+		        dispatcherTimer.Interval = new TimeSpan(0, 2, 0);
+		        dispatcherTimer.Start();
+            }
+
             if (cmdBulkLaunch.Content.ToString() == "Cancel")
             {
                 if (bulkLaunchCTS != null)
@@ -546,6 +625,8 @@ namespace Mag_ACClientLauncher
 
         private void cmdBulkCloseAll_Click(object sender, RoutedEventArgs e)
         {
+	        ProcessLaunchInfoQueue.Clear();
+
             var processes = Process.GetProcessesByName("acclient");
 
             foreach (var process in processes)

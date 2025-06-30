@@ -29,7 +29,8 @@ namespace Mag_ACClientLauncher.Win32
         /// <remarks>
         /// This function was cleverly named by parad0x, one of the developers of Decal for Asheron's Call.
         /// </remarks>
-        public static bool RunSuspendedCommaInjectCommaAndResume(string fileName, string arguments, string pathOfDllToInject, string dllFunctionToExecute = null)
+        /// <returns>dwProcessId if successful, -1 if unsuccessful</returns>
+        public static int RunSuspendedCommaInjectCommaAndResume(string fileName, string arguments, string pathOfDllToInject, string dllFunctionToExecute = null)
         {
             // Reference: https://docs.microsoft.com/en-us/windows/desktop/procthread/process-creation-flags
             const uint CREATE_SUSPENDED = 0x00000004;
@@ -41,11 +42,16 @@ namespace Mag_ACClientLauncher.Win32
             kernel32.STARTUPINFO sInfo = new kernel32.STARTUPINFO();
 
             if (!kernel32.CreateProcess(null, fileName + " " + arguments, ref pSec, ref tSec, false, CREATE_SUSPENDED, IntPtr.Zero, Path.GetDirectoryName(fileName), ref sInfo, out var pInfo))
-                return false;
+                return -1;
 
             try
             {
-                return Inject(pInfo.hProcess, pathOfDllToInject, dllFunctionToExecute);
+	            if (Inject(pInfo.hProcess, pathOfDllToInject, dllFunctionToExecute))
+		            return pInfo.dwProcessId;
+
+                // todo kill the process if we failed to inject
+
+	            return -1;
             }
             finally
             {
