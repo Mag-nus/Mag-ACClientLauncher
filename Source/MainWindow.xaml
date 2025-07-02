@@ -95,7 +95,7 @@
                     <Button x:Name="cmdMinimizeAll" Content="Minimize All" Margin="0,70,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" RenderTransformOrigin="2.764,0.605" HorizontalAlignment="Right" Width="75" Click="CmdMinimizeAll_Click"/>
                     <Button x:Name="cmdBulkCloseAll" Content="Close All" Margin="0,95,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" RenderTransformOrigin="2.764,0.605" HorizontalAlignment="Right" Width="75" Click="cmdBulkCloseAll_Click"/>
                     <Label Content="Restart clients after" HorizontalAlignment="Left" Margin="269,34,0,0" VerticalAlignment="Top"/>
-                    <TextBox x:Name="txtBulkLaunchRestartAfterHrs" Margin="385,37,0,0" TextWrapping="Wrap" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="53" RenderTransformOrigin="1.927,-3.718" Text="{Binding BulkLaunchQuantity, Mode=TwoWay, Source={x:Static p:Settings.Default}}" MaxLength="5" MaxLines="1"/>
+                    <TextBox x:Name="txtBulkLaunchRestartAfterHrs" Margin="385,37,0,0" TextWrapping="Wrap" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="53" RenderTransformOrigin="1.927,-3.718" Text="{Binding BulkLaunchRestartAfterHrs, Mode=TwoWay, Source={x:Static p:Settings.Default}}" MaxLength="2" MaxLines="1"/>
                     <Label Content="hrs" HorizontalAlignment="Left" Margin="443,36,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>

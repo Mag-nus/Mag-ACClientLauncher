@@ -190,5 +190,17 @@ namespace Mag_ACClientLauncher.Properties {
                 this["BulkLaunchPassword"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("12")]
+        public int BulkLaunchRestartAfterHrs {
+            get {
+                return ((int)(this["BulkLaunchRestartAfterHrs"]));
+            }
+            set {
+                this["BulkLaunchRestartAfterHrs"] = value;
+            }
+        }
     }
 }
