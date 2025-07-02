@@ -623,17 +623,32 @@ namespace Mag_ACClientLauncher
                 ShowWindow(process.MainWindowHandle, SW_MINIMIZE);
         }
 
-        private void cmdBulkCloseAll_Click(object sender, RoutedEventArgs e)
+        private async void cmdBulkCloseAll_Click(object sender, RoutedEventArgs e)
         {
-	        ProcessLaunchInfoQueue.Clear();
+			try
+			{
+				cmdBulkCloseAll.IsEnabled = false;
+				cmdBulkCloseAll.Content = "Closing";
 
-            var processes = Process.GetProcessesByName("acclient");
+				ProcessLaunchInfoQueue.Clear();
 
-            foreach (var process in processes)
-                process.CloseMainWindow();
-        }
+				var processes = Process.GetProcessesByName("acclient");
 
-        private async Task DoBulkLaunch(int launchQuantity, int startIndex, string userNamePrefix, string password, TimeSpan interval, Server server, CancellationToken token)
+				foreach (var process in processes)
+				{
+					process.CloseMainWindow();
+
+					await Task.Delay(250);
+				}
+			}
+			finally
+			{
+				cmdBulkCloseAll.Content = "Close All";
+				cmdBulkCloseAll.IsEnabled = true;
+			}
+		}
+
+		private async Task DoBulkLaunch(int launchQuantity, int startIndex, string userNamePrefix, string password, TimeSpan interval, Server server, CancellationToken token)
         {
             if (String.IsNullOrWhiteSpace(password))
             {
