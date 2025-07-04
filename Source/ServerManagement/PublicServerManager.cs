@@ -34,7 +34,17 @@ namespace Mag_ACClientLauncher.ServerManagement
         {
             var xs = new XmlSerializer(typeof(List<ServerItem>));
 
-            return (List<ServerItem>)xs.Deserialize(textReader);
+            try
+            {
+                return (List<ServerItem>)xs.Deserialize(textReader);
+
+            }
+            catch (InvalidOperationException ex) // xml is invalid
+            {
+                MessageBox.Show($"There is an error in the servers list file:{Environment.NewLine}{Environment.NewLine}ex.Message: {ex.Message}{Environment.NewLine}{Environment.NewLine}ex.InnerException.Message: {ex.InnerException.Message}");
+
+                return new List<ServerItem>();
+            }
         }
 
         public static DateTime GetLastUpdated()

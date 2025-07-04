@@ -133,7 +133,6 @@ namespace Mag_ACClientLauncher.Win32
         public static extern int GetExitCodeThread(IntPtr hThread, out uint lpExitCode);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         [SuppressUnmanagedCodeSecurity]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool CloseHandle(IntPtr hObject);
