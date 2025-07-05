@@ -136,7 +136,7 @@ namespace Mag_ACClientLauncher
             cmdDeleteAccount.IsEnabled = (accounts.Count > 0);
         }
 
-        private bool DoLaunch(Server server, Account account)
+        private bool DoLaunch(Server server, Account account, int? userSpecifiedPort = null)
         {
             var acClientExeLocation = Properties.Settings.Default.ACClientLocation;
             var decalInjectLocation = Properties.Settings.Default.DecalInjectLocation;
@@ -181,6 +181,44 @@ namespace Mag_ACClientLauncher
             if (server.ReadOnlyDat)
                 arguments += " -rodat";
 
+            
+            if (userSpecifiedPort.HasValue)
+            {
+                var lines = File.ReadAllLines(userPreferencesIniPath);
+
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    if (lines[i].ToLower().StartsWith("computeuniqueport"))
+                        lines[i] = "ComputeUniquePort=False";
+
+                    if (lines[i].ToLower().StartsWith("userspecifiedport"))
+                        lines[i] = $"UserSpecifiedPort={userSpecifiedPort}";
+				}
+
+                File.WriteAllLines(userPreferencesIniPath, lines);
+            }
+            else
+            {
+				var lines = File.ReadAllLines(userPreferencesIniPath);
+                var needsSave = false;
+
+				for (int i = 0; i < lines.Length; i++)
+				{
+                    if (lines[i].ToLower().StartsWith("computeuniqueport=false"))
+                    {
+                        lines[i] = "ComputeUniquePort=True";
+                        needsSave = true;
+
+					}
+
+					if (lines[i].ToLower().StartsWith("userspecifiedport"))
+						lines[i] = $"UserSpecifiedPort=9000";
+				}
+
+                if (needsSave)
+				    File.WriteAllLines(userPreferencesIniPath, lines);
+			}
+
 
             if (!Properties.Settings.Default.InjectDecal)
             {
@@ -197,26 +235,28 @@ namespace Mag_ACClientLauncher
                     server = server,
                     account = account,
 
-					Process = process,
-				});
-			}
-			else
+                    Process = process,
+
+                    UserSpecifiedPort = userSpecifiedPort
+                });
+            }
+            else
             {
-	            var dwProcessId = Injector.RunSuspendedCommaInjectCommaAndResume(acClientExeLocation, arguments, decalInjectLocation, "DecalStartup");
+                var dwProcessId = Injector.RunSuspendedCommaInjectCommaAndResume(acClientExeLocation, arguments, decalInjectLocation, "DecalStartup");
 
                 if (dwProcessId == -1)
                     return false;
 
-				ProcessLaunchInfoQueue.Enqueue(new ProcessLaunchInfo
-				{
-					server = server,
-					account = account,
+                ProcessLaunchInfoQueue.Enqueue(new ProcessLaunchInfo
+                {
+                    server = server,
+                    account = account,
 
                     Process = Process.GetProcessById(dwProcessId),
                 });
 
-				return true;
-			}
+                return true;
+            }
 
 			return true;
         }
@@ -512,6 +552,12 @@ namespace Mag_ACClientLauncher
         // ========== BULK LAUNCH TAB ==========
         // =====================================
 
+        private readonly string userPreferencesIniPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Asheron's Call", "UserPreferences.ini");
+
+        private const int userSpecifiedPortSpacing = 5;
+
+        private readonly Queue<int> userSpecifiedPorts = new Queue<int>();
+
         private class ProcessLaunchInfo
         {
 	        public DateTime LaunchTime = DateTime.UtcNow;
@@ -520,6 +566,8 @@ namespace Mag_ACClientLauncher
 	        public Account account;
 
 			public Process Process;
+
+            public int? UserSpecifiedPort;
         }
 
         private readonly Queue<ProcessLaunchInfo> ProcessLaunchInfoQueue = new Queue<ProcessLaunchInfo>();
@@ -551,10 +599,13 @@ namespace Mag_ACClientLauncher
 
             await Task.Delay(TimeSpan.FromSeconds(20));
 
-            txtBulkLaunchStatus.Text += $"{DateTime.Now}: Relaunching user {peek.account.UserName}" + Environment.NewLine;
+            if (peek.UserSpecifiedPort.HasValue)
+                userSpecifiedPorts.Enqueue(peek.UserSpecifiedPort.Value);
+
+			txtBulkLaunchStatus.Text += $"{DateTime.Now}: Relaunching user {peek.account.UserName}" + Environment.NewLine;
             txtBulkLaunchStatus.ScrollToEnd();
 
-            if (!DoLaunch(peek.server, peek.account))
+            if (!DoLaunch(peek.server, peek.account, userSpecifiedPorts.Dequeue()))
             {
 	            txtBulkLaunchStatus.Text += $"{DateTime.Now}: Relaunching user {peek.account.UserName} FAILED" + Environment.NewLine;
 	            txtBulkLaunchStatus.ScrollToEnd();
@@ -572,6 +623,17 @@ namespace Mag_ACClientLauncher
 
         private async void cmdBulkLaunch_Click(object sender, RoutedEventArgs e)
         {
+            if (userSpecifiedPorts.Count == 0)
+            {
+                var nextPort = Random.Shared.Next(9010, 9050);
+
+                for (int i = 0; i < 5000; i++)
+                {
+                    userSpecifiedPorts.Enqueue(nextPort);
+					nextPort += userSpecifiedPortSpacing;
+				}
+            }
+
 	        if (dispatcherTimer == null)
 	        {
 		        dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
@@ -668,7 +730,7 @@ namespace Mag_ACClientLauncher
 
                 var account = new Account { UserName = userName, Password = password };
 
-                if (!DoLaunch(server, account))
+                if (!DoLaunch(server, account, userSpecifiedPorts.Dequeue()))
                 {
                     txtBulkLaunchStatus.Text += $"{DateTime.Now}: Launching user {userName}, connection {(i - startIndex) + 1} of {launchQuantity} FAILED" + Environment.NewLine;
                     txtBulkLaunchStatus.ScrollToEnd();
